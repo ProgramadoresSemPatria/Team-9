@@ -6,6 +6,7 @@ import (
 
 	"github.com/ProgramadoresSemPatria/Team-9/internal/config"
 	"github.com/ProgramadoresSemPatria/Team-9/internal/database/connection"
+	"github.com/ProgramadoresSemPatria/Team-9/internal/database/migrations"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -25,6 +26,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	migrations.RunMigrations(db)
 
 	r := gin.Default()
 
