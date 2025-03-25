@@ -1,8 +1,18 @@
+package models
+
+import (
+	"time"
+
+	"github.com/google/uuid"
+	"gorm.io/gorm"
+)
+
 type SignInInput struct {
 	Name     string `json:"name" binding:"required"`
 	Email    string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
+
 type UserResponse struct {
 	ID        uuid.UUID `json:"id,omitempty"`
 	Name      string    `json:"name,omitempty"`
@@ -11,6 +21,8 @@ type UserResponse struct {
 	UpdatedAt time.Time `json:"updated_at"`
 	Verified  bool      `json:"verified"`
 }
+
+
 type User struct {
 	ID        uuid.UUID `json:"id" gorm:"type:uuid;primaryKey;"`
 	Name      string    `json:"name"`
@@ -21,6 +33,8 @@ type User struct {
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
+
+
 func FilteredResponse(user User) UserResponse {
 	return UserResponse{
 		ID:        user.ID,
@@ -29,4 +43,10 @@ func FilteredResponse(user User) UserResponse {
 		CreatedAt: user.CreatedAt,
 		UpdatedAt: user.UpdatedAt,
 	}
+}
+
+
+func (u *User) BeforeCreate(d *gorm.DB) (err error) {
+	u.ID = uuid.New()
+	return
 }
