@@ -1,8 +1,8 @@
 import { Route, Routes } from 'react-router';
 import HomePage from './pages/Home';
 import RegisterPage from './pages/Register';
-import SignInPage from './pages/SignIn';
 import HeaderLayout from './layouts/Header';
+import SignInPage from './pages/SignIn';
 
 function App() {
     return (
