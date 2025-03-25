@@ -5,7 +5,7 @@ import { registerSchema } from '../schemas/register';
 import { useState } from 'react';
 import { Link } from 'react-router';
 
-type CreateUserForm = z.infer<typeof registerSchema>;
+type RegisterForm = z.infer<typeof registerSchema>;
 
 const RegisterPage = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -14,14 +14,14 @@ const RegisterPage = () => {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<CreateUserForm>({
+    } = useForm<RegisterForm>({
         resolver: zodResolver(registerSchema),
     });
 
-    const onSubmit: SubmitHandler<CreateUserForm> = async (createUserParams) => {
+    const onSubmit: SubmitHandler<RegisterForm> = async (registerParams) => {
         setIsLoading(true);
         try {
-            console.log(createUserParams);
+            console.log(registerParams);
         } catch (error) {
             console.error(error);
         } finally {
