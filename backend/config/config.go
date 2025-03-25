@@ -56,3 +56,10 @@ func Load() error {
 	return nil
 }
 
+func GetDB() DBConfig {
+	if cfg == nil {
+		log.Fatal("Configuration is not initalized")
+	}
+	return cfg.DB
+}
+
