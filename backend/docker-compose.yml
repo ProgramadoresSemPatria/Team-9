@@ -1,3 +1,4 @@
+services:
   gofit:
     container_name: gofit
     ports:
@@ -15,6 +16,7 @@
       POSTGRES_TIME_ZONE: ${POSTGRES_TIME_ZONE}
     depends_on:
       - postgres
+
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin
@@ -25,3 +27,16 @@
       - "8080:80"
     depends_on:
       - postgres
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgresDB:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+volumes:
+  postgresDB:
