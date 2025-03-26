@@ -4,6 +4,7 @@ import RegisterPage from './pages/Register';
 import HeaderLayout from './layouts/Header';
 import SignInPage from './pages/SignIn';
 import AddNewFlowPage from './pages/AddNewFlow';
+import AddNewTrainingDayPage from './pages/AddNewTrainingDay';
 
 function App() {
     return (
@@ -12,6 +13,7 @@ function App() {
                 <Route element={<HeaderLayout />}>
                     <Route path="/" element={<HomePage />} />
                     <Route path="add-new-flow" element={<AddNewFlowPage />} />
+                    <Route path="add-new-day" element={<AddNewTrainingDayPage />} />
                 </Route>
                 <Route path="register" element={<RegisterPage />} />
                 <Route path="sign-in" element={<SignInPage />} />
