@@ -1,3 +1,22 @@
+package tests
+
+import (
+	"bytes"
+	"encoding/json"
+	"net/http"
+	"testing"
+	"net/http/httptest"
+
+	"github.com/ProgramadoresSemPatria/Team-9/internal/handlers"
+	"github.com/ProgramadoresSemPatria/Team-9/internal/models"
+	"github.com/gin-gonic/gin"
+	"gorm.io/driver/sqlite"
+	"github.com/stretchr/testify/assert"
+	"gorm.io/gorm"
+)
+
+
+
 func setupRouter() (*gin.Engine, *gorm.DB) {
 	db, _ := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
 	db.AutoMigrate(&models.User{})
@@ -11,6 +30,8 @@ func setupRouter() (*gin.Engine, *gorm.DB) {
 	router.GET("/profile", handlers.AuthMiddleware(), handlers.ProfileHandler)
 	return router, db
 }
+
+
 func TestCreateUserHandler(t *testing.T) {
 	router, db := setupRouter()
 	defer db.Exec("DROP TABLE users")
@@ -29,6 +50,7 @@ func TestCreateUserHandler(t *testing.T) {
 	assert.NotEmpty(t, user.ID)
 	assert.True(t, user.Verified)
 }
+
 func TestLoginHandler(t *testing.T) {
 	router, db := setupRouter()
 	defer db.Exec("DROP TABLE users")
@@ -75,6 +97,8 @@ func TestProfileHandler(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, wProfile.Code)
 }
+
+
 func TestAuthMiddleware(t *testing.T) {
 	router, _ := setupRouter()
 
@@ -89,4 +113,15 @@ func TestAuthMiddleware(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusUnauthorized, w.Code)
+}
+
+func CreateUserBadRequest(t *testing.T) {
+	router, _ := setupRouter()
+
+	body := []byte(`{"email": "test@example.com"}`)
+	req, _ := http.NewRequest("POST", "/create", bytes.NewBuffer(body))
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusBadRequest, w.Code)
 }
