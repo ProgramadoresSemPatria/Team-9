@@ -1,9 +1,41 @@
+import { z } from 'zod';
+import { addNewFlowSchema } from '../schemas/addNewFlow';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
+
+type AddNewFlowForm = z.infer<typeof addNewFlowSchema>;
+
 const AddNewFlow = () => {
+    const [isLoading, setIsLoading] = useState(false);
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<AddNewFlowForm>({
+        resolver: zodResolver(addNewFlowSchema),
+    });
+
+    const onSubmit: SubmitHandler<RegisterForm> = async (registerParams) => {
+        setIsLoading(true);
+        try {
+            console.log(registerParams);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
-        <section className="flex min-h-screen w-full flex-col items-center gap-5">
-            <h1 className="text-lg font-bold">New Flow</h1>
+        <section className="flex min-h-screen w-full flex-col items-center gap-5 px-8">
+            <h1 className="w-full text-left text-lg font-bold">New Flow</h1>
             <div>
-                <form className="flex flex-col gap-4">
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="flex flex-col gap-4"
+                >
                     <div className="flex flex-col gap-1.5">
                         <label
                             htmlFor="newFlowTitle"
@@ -14,9 +46,17 @@ const AddNewFlow = () => {
                         <input
                             type="text"
                             id="newFlowTitle"
-                            className="rounded-md border-1 border-gray-200 px-3 py-2.5"
+                            className={`mt-1 block rounded-md border bg-white px-3 py-2 placeholder-gray-400 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none ${
+                                errors.title ? 'border-red-500' : 'border-gray-300'
+                            }`}
                             placeholder="Enter a title for your flow"
+                            {...register('title')}
                         />
+                        {errors.title && (
+                            <p className="mt-1 text-sm text-red-600">
+                                {errors.title.message}
+                            </p>
+                        )}
                     </div>
                     <div className="flex flex-col gap-1.5">
                         <label
@@ -26,31 +66,51 @@ const AddNewFlow = () => {
                             Level
                         </label>
                         <select
-                            name=""
                             id="workoutLevel"
-                            className="rounded-md border-1 border-gray-200 px-3 py-2.5"
+                            className={`mt-1 block rounded-md border bg-white px-3 py-2 placeholder-gray-400 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none ${
+                                errors.workoutLevel
+                                    ? 'border-red-500'
+                                    : 'border-gray-300'
+                            }`}
+                            {...register('workoutLevel')}
                         >
                             <option value="beginner">Beginner</option>
                             <option value="intermediate">Intermediate</option>
                             <option value="advanced">Advanced</option>
                         </select>
+                        {errors.workoutLevel && (
+                            <p className="mt-1 text-sm text-red-600">
+                                {errors.workoutLevel.message}
+                            </p>
+                        )}
                     </div>
                     <div className="flex flex-col gap-1.5">
-                        <label htmlFor="coverImg" className="text-sm font-medium">
+                        <label htmlFor="cover" className="text-sm font-medium">
                             Cover
                         </label>
                         <input
                             type="file"
-                            name=""
-                            id=""
-                            className="rounded-md border-1 border-gray-200 px-3 py-2.5"
+                            id="cover"
+                            className={`mt-1 block rounded-md border bg-white px-3 py-2 placeholder-gray-400 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none ${
+                                errors.cover ? 'border-red-500' : 'border-gray-300'
+                            }`}
+                            {...register('cover')}
                         />
+                        {errors.cover && (
+                            <p className="mt-1 text-sm text-red-600">
+                                {errors.cover.message}
+                            </p>
+                        )}
                     </div>
+                    <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="mt-2 cursor-pointer rounded-md bg-black px-4 py-2 font-medium text-white"
+                    >
+                        Criar
+                    </button>
                 </form>
             </div>
-            <button className="w-[337px] rounded-md bg-black px-4 py-2 font-medium text-white">
-                Criar
-            </button>
         </section>
     );
 };
