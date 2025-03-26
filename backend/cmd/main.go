@@ -7,6 +7,7 @@ import (
 	"github.com/ProgramadoresSemPatria/Team-9/internal/config"
 	"github.com/ProgramadoresSemPatria/Team-9/internal/database/connection"
 	"github.com/ProgramadoresSemPatria/Team-9/internal/database/migrations"
+	"github.com/ProgramadoresSemPatria/Team-9/internal/handlers"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -35,6 +36,13 @@ func main() {
 		c.Set("db", db)
 		c.Next()
 	})
+
+	r.POST("/register", handlers.CreateUserHandler)
+	r.POST("/login", handlers.LoginHandler)
+	authorized := r.Group("/", handlers.AuthMiddleware())
+	{
+		authorized.GET("/profile", handlers.ProfileHandler)
+	}
 
 	http.ListenAndServe(fmt.Sprintf(":%s", config.GetServerPort()), r)
 
