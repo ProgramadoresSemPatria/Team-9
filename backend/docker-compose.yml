@@ -1,0 +1,17 @@
+  gofit:
+    container_name: gofit
+    ports:
+      - 9090:9090
+    build:
+      context: .
+    volumes:
+      - .:/app
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      POSTGRES_TIME_ZONE: ${POSTGRES_TIME_ZONE}
+    depends_on:
+      - postgres
