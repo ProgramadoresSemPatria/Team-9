@@ -3,11 +3,14 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
+	"time"
 
 	"github.com/ProgramadoresSemPatria/Team-9/internal/config"
 	"github.com/ProgramadoresSemPatria/Team-9/internal/database/connection"
 	"github.com/ProgramadoresSemPatria/Team-9/internal/database/migrations"
 	"github.com/ProgramadoresSemPatria/Team-9/internal/handlers"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -31,6 +34,16 @@ func main() {
 	migrations.RunMigrations(db)
 
 	r := gin.Default()
+
+	corsOrigin := os.Getenv("CORS")
+
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:  []string{corsOrigin},
+		AllowMethods:  []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:  []string{"Origin", "Content-Type", "Accept"},
+		ExposeHeaders: []string{"Content-Length"},
+		MaxAge:        12 * time.Hour,
+	}))
 
 	r.Use(func(c *gin.Context) {
 		c.Set("db", db)
