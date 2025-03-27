@@ -8,12 +8,12 @@ import (
 )
 
 type Flow struct {
-	ID        uuid.UUID `json:"id,omitempty" gorm:"type:uuid;primary_key;"`
-	Title     string    `json:"title"`
-	Level     string    `json:"level"`
-	Cover     string    `json:"cover"`
-	UserID    uuid.UUID `json:"user_id" gorm:"type:uuid"`
-	User      User      `json:"user" gorm:"foreignKey:UserID;references:ID"`
+	ID        uuid.UUID `json:"id" gorm:"type:uuid;primary_key;"`
+	Title     string    `json:"title" gorm:"size:255;not null"`
+	Level     string    `json:"level" gorm:"size:50;not null"`
+	Cover     string    `json:"cover" gorm:"size:255"`
+	UserID    uuid.UUID `json:"user_id" gorm:"type:uuid;not null;index"`
+	User      User      `json:"user" gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt time.Time `json:"updated_at" gorm:"autoUpdateTime"`
 }
