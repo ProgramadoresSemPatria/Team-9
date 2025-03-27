@@ -2,11 +2,12 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { createExerciseSchema } from '../schemas/exercise';
+import { Exercise } from '../types';
 
 type CreateExerciseForm = z.infer<typeof createExerciseSchema>;
 
 type CreateExerciseFormProps = {
-    setExercises: (exercises: CreateExerciseForm) => void;
+    setExercises: (exercises: Exercise) => void;
 };
 
 const CreateExerciseForm = ({ setExercises }: CreateExerciseFormProps) => {
@@ -66,7 +67,7 @@ const CreateExerciseForm = ({ setExercises }: CreateExerciseFormProps) => {
                     </p>
                 )}
             </div>
-            <div className="flex w-full items-end justify-between px-3">
+            <div className="flex w-full items-end justify-between">
                 <div>
                     <label htmlFor="repetitions" className="">
                         Repetitions
@@ -78,7 +79,7 @@ const CreateExerciseForm = ({ setExercises }: CreateExerciseFormProps) => {
                         className={`h-10 w-32 rounded-md border bg-white px-3 py-2 placeholder-gray-400 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none ${
                             errors.repetitions ? 'border-red-500' : 'border-gray-300'
                         }`}
-                        {...register('repetitions')}
+                        {...register('repetitions', { valueAsNumber: true })}
                     />
                     {errors.repetitions && (
                         <p className="mt-1 text-sm text-red-600">
@@ -97,7 +98,7 @@ const CreateExerciseForm = ({ setExercises }: CreateExerciseFormProps) => {
                         className={`h-10 w-32 rounded-md border bg-white px-3 py-2 placeholder-gray-400 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none ${
                             errors.sets ? 'border-red-500' : 'border-gray-300'
                         }`}
-                        {...register('sets')}
+                        {...register('sets', { valueAsNumber: true })}
                     />
                     {errors.sets && (
                         <p className="mt-1 text-sm text-red-600">
