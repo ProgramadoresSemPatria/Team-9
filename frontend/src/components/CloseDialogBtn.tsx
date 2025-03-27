@@ -1,7 +1,7 @@
 const CloseDialogBtn = ({ onClick }: { onClick: () => void }) => {
     return (
         <button
-            className="text-brand-secondary hover:bg-brand-neutral hover:text-brand-accent rounded-sm border-2 px-2 transition-colors duration-200"
+            className="cursor-pointer rounded-sm border-2 border-none bg-red-600 px-2 text-white transition-colors duration-200 hover:bg-red-800"
             onClick={onClick}
         >
             X
