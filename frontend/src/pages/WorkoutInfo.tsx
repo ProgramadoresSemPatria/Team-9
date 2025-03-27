@@ -44,7 +44,9 @@ const WorkoutInfo = () => {
                 </div>
             </div>
             <div className="flex flex-col gap-5">
-                
+                {workout.exercises.map((exercise) => (
+                    <ExerciseInfo key={exercise.name} exerciseInfo={exercise} />
+                ))}
             </div>
             <button
                 className="flex w-full items-center justify-center gap-1 rounded-md bg-black px-4 py-2 font-medium text-white"
