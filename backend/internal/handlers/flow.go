@@ -1,3 +1,15 @@
+package handlers
+
+import (
+	"net/http"
+	"time"
+
+	"github.com/ProgramadoresSemPatria/Team-9/internal/models"
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"gorm.io/gorm"
+)
+
 func CreateFlow(c *gin.Context) {
 	userID, exists := c.Get("userID")
 	if !exists {
@@ -99,3 +111,26 @@ func UpdateFlow(c *gin.Context) {
 	c.JSON(http.StatusOK, existingFlow)
 }
 
+func DeleteFlow(c *gin.Context) {
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
+		return
+	}
+
+	id := c.Param("id")
+	db := c.MustGet("db").(*gorm.DB)
+
+	var flow models.Flow
+	if err := db.First(&flow, "id = ? AND user_id = ?", id, userID).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Flow not found or not owned by user"})
+		return
+	}
+
+	if err := db.Delete(&flow).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete flow"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Flow deleted successfully"})
+}
