@@ -2,10 +2,19 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { createNewTrainingDaySchema } from '../schemas/trainingDay';
+import { Exercise } from '../types';
 
 type CreateNewTrainingDayFormType = z.infer<typeof createNewTrainingDaySchema>;
 
-const CreateNewTrainingDayForm = () => {
+type CreateNewTrainingDayFormProps = {
+    exercises: Exercise[];
+    setOpenAddExerciseDialog: () => void;
+};
+
+const CreateNewTrainingDayForm = ({
+    exercises,
+    setOpenAddExerciseDialog,
+}: CreateNewTrainingDayFormProps) => {
     const {
         register,
         handleSubmit,
@@ -18,6 +27,7 @@ const CreateNewTrainingDayForm = () => {
         createNewTrainingDayParams
     ) => {
         console.log(createNewTrainingDayParams);
+        console.log(exercises);
     };
     return (
         <form
@@ -92,10 +102,16 @@ const CreateNewTrainingDayForm = () => {
                     )}
                 </div>
             </div>
-            <div className="flex w-full justify-center">
+            <div className="flex w-full flex-col items-center gap-3">
+                <button
+                    className="cursor-pointer rounded-md border border-transparent bg-black px-4 py-2 text-xl text-white shadow-sm transition-colors duration-200 hover:bg-gray-800 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:w-48"
+                    onClick={() => setOpenAddExerciseDialog()}
+                >
+                    Add exercise
+                </button>
                 <button
                     type="submit"
-                    className="flex h-10 w-full cursor-pointer items-center justify-center rounded-md bg-black text-white md:w-48"
+                    className="flex h-10 w-full cursor-pointer items-center justify-center rounded-md bg-black text-white md:w-64"
                 >
                     <span className="text-xl">Save</span>
                 </button>
