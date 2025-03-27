@@ -21,9 +21,9 @@ type WorkoutDay struct {
 }
 
 type WorkouDayInput struct {
-	Title    string `json:"title"`
-	Day      string `json:"day"`
-	Duration string `json:"duration"`
+	Title    string `json:"title" binding:"required,min=3,max=255"`
+	Day      string `json:"day" binding:"required,min=3,max=50"`
+	Duration string `json:"duration" binding:"required,min=3,max=50"`
 }
 
 func (w *WorkoutDay) BeforeCreate(d *gorm.DB) (err error) {
