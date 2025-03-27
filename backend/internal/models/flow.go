@@ -1,17 +1,21 @@
 package models
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type Flow struct {
-	ID     uuid.UUID `json:"id,omitempty" gorm:"type:uuid;primary_key;"`
-	Title  string    `json:"title"`
-	Level  string    `json:"level"`
-	Cover  string    `json:"cover"`
-	UserID uuid.UUID `json:"user_id" gorm:"type:uuid"`
-	User   User      `json:"user" gorm:"foreignKey:UserID;references:ID"`
+	ID        uuid.UUID `json:"id,omitempty" gorm:"type:uuid;primary_key;"`
+	Title     string    `json:"title"`
+	Level     string    `json:"level"`
+	Cover     string    `json:"cover"`
+	UserID    uuid.UUID `json:"user_id" gorm:"type:uuid"`
+	User      User      `json:"user" gorm:"foreignKey:UserID;references:ID"`
+	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime"`
+	UpdatedAt time.Time `json:"updated_at" gorm:"autoUpdateTime"`
 }
 
 type FlowInput struct {
