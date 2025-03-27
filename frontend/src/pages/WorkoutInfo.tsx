@@ -16,6 +16,10 @@ const WorkoutInfo = () => {
         ],
     });
 
+    const handleFinishWorkout = () => {
+        setWorkout((prev) => ({ ...prev, isWorkoutFinished: true }));
+    };
+
     return (
         <div className="flex flex-col gap-5 p-8">
             <div className="flex flex-col gap-1.5">
@@ -44,6 +48,7 @@ const WorkoutInfo = () => {
             </div>
             <button
                 className="flex w-full items-center justify-center gap-1 rounded-md bg-black px-4 py-2 font-medium text-white"
+                onClick={handleFinishWorkout}
             >
                 Mark as finished
                 <CheckCircle weight="fill" size={18} className="text-white" />
