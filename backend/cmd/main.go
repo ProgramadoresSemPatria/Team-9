@@ -50,11 +50,23 @@ func main() {
 		c.Next()
 	})
 
+	// Public routes
 	r.POST("/register", handlers.CreateUserHandler)
 	r.POST("/login", handlers.LoginHandler)
-	authorized := r.Group("/", handlers.AuthMiddleware())
+
+	// Auth routes group
+	authGroup := r.Group("/")
+	authGroup.Use(handlers.AuthMiddleware())
 	{
-		authorized.GET("/profile", handlers.ProfileHandler)
+		// User routes
+		authGroup.GET("/profile", handlers.ProfileHandler)
+
+		// Flow routes - IMPORTANT: Add this inside the auth group
+		authGroup.POST("/flows", handlers.CreateFlow)
+		authGroup.GET("/flows", handlers.GetUserFlows)
+		authGroup.GET("/flows/:id", handlers.GetFlow)
+		authGroup.PUT("/flows/:id", handlers.UpdateFlow)
+		authGroup.DELETE("/flows/:id", handlers.DeleteFlow)
 	}
 
 	http.ListenAndServe(fmt.Sprintf(":%s", config.GetServerPort()), r)
