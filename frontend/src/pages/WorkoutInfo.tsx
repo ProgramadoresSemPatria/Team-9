@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { CheckCircle, Fire, Timer } from 'phosphor-react';
 import ExerciseInfo from '../components/ExerciseInfo';
 import { useState } from 'react';
