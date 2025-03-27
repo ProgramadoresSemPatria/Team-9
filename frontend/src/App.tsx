@@ -5,6 +5,7 @@ import HeaderLayout from './layouts/Header';
 import SignInPage from './pages/SignIn';
 import AddNewFlowPage from './pages/AddNewFlow';
 import AddNewTrainingDayPage from './pages/AddNewTrainingDay';
+import WorkoutInfo from './pages/WorkoutInfo';
 
 function App() {
     return (
@@ -14,6 +15,7 @@ function App() {
                     <Route path="/" element={<HomePage />} />
                     <Route path="add-new-flow" element={<AddNewFlowPage />} />
                     <Route path="add-new-day" element={<AddNewTrainingDayPage />} />
+                    <Route path="workout-info" element={<WorkoutInfo />} />
                 </Route>
                 <Route path="register" element={<RegisterPage />} />
                 <Route path="sign-in" element={<SignInPage />} />
