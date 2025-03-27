@@ -178,19 +178,20 @@ func TestGetUserFlows_Integration(t *testing.T) {
 		assert.Empty(t, response)
 	})
 }
+
 func TestGetFlow_Integration(t *testing.T) {
-	router, db := setupTestEnvironment()
+	router, db, userID := setupTestEnvironment()
 	defer db.Migrator().DropTable(&models.Flow{}, &models.User{})
 
 	flow := models.Flow{
 		ID:     uuid.New(),
 		Title:  "Test Get Flow",
 		Level:  "advanced",
-		UserID: getTestUserID(db),
+		UserID: userID,
 	}
 	db.Create(&flow)
 
-	t.Run("Get Existing Flow", func(t *testing.T) {
+	t.Run("Success", func(t *testing.T) {
 		req, _ := http.NewRequest("GET", "/flows/"+flow.ID.String(), nil)
 		w := httptest.NewRecorder()
 		router.ServeHTTP(w, req)
@@ -204,7 +205,7 @@ func TestGetFlow_Integration(t *testing.T) {
 		assert.Equal(t, "Test Get Flow", response.Title)
 	})
 
-	t.Run("Get Non-Existent Flow", func(t *testing.T) {
+	t.Run("Not Found", func(t *testing.T) {
 		nonExistentID := uuid.New()
 		req, _ := http.NewRequest("GET", "/flows/"+nonExistentID.String(), nil)
 		w := httptest.NewRecorder()
