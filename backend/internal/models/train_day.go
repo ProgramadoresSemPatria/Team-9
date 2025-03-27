@@ -10,3 +10,8 @@ type WorkoutDay struct {
 	FlowID    uuid.UUID `json:"flow_id" gorm:"type:uuid;not null;index"`
 	Flow      Flow      `json:"flow" gorm:"foreignKey:FlowID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
+type WorkouDayInput struct {
+	Title    string `json:"title"`
+	Day      string `json:"day"`
+	Duration string `json:"duration"`
+}
