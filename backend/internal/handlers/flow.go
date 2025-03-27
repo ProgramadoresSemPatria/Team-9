@@ -61,3 +61,41 @@ func GetFlow(c *gin.Context) {
 	c.JSON(http.StatusOK, flow)
 }
 
+func UpdateFlow(c *gin.Context) {
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
+		return
+	}
+
+	id := c.Param("id")
+	db := c.MustGet("db").(*gorm.DB)
+
+	var existingFlow models.Flow
+	if err := db.First(&existingFlow, "id = ? AND user_id = ?", id, userID).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Flow not found or not owned by user"})
+		return
+	}
+
+	var input models.FlowInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	updates := map[string]interface{}{
+		"title":      input.Title,
+		"level":      input.Level,
+		"cover":      input.Cover,
+		"updated_at": time.Now(),
+	}
+
+	if err := db.Model(&existingFlow).Updates(updates).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update flow"})
+		return
+	}
+
+	db.Preload("User").First(&existingFlow, existingFlow.ID)
+	c.JSON(http.StatusOK, existingFlow)
+}
+
