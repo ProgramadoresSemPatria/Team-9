@@ -48,3 +48,16 @@ func GetUserFlows(c *gin.Context) {
 	c.JSON(http.StatusOK, flows)
 }
 
+func GetFlow(c *gin.Context) {
+	id := c.Param("id")
+	db := c.MustGet("db").(*gorm.DB)
+
+	var flow models.Flow
+	if err := db.Preload("User").First(&flow, "id = ?", id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Flow not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, flow)
+}
+
