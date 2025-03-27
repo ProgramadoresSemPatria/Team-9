@@ -48,7 +48,7 @@ func setupTestEnvironment() (*gin.Engine, *gorm.DB, uuid.UUID) {
 }
 
 func TestCreateFlow_Integration(t *testing.T) {
-	router, db := setupTestEnvironment()
+	router, db, _ := setupTestEnvironment()
 	defer db.Migrator().DropTable(&models.Flow{}, &models.User{})
 
 	t.Run("Success", func(t *testing.T) {
