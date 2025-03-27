@@ -112,6 +112,72 @@ func TestCreateFlow_Integration(t *testing.T) {
 	})
 }
 
+func TestGetUserFlows_Integration(t *testing.T) {
+	router, db, userID := setupTestEnvironment()
+	defer db.Migrator().DropTable(&models.Flow{}, &models.User{})
+
+	flows := []models.Flow{
+		{ID: uuid.New(), Title: "Flow 1", UserID: userID},
+		{ID: uuid.New(), Title: "Flow 2", UserID: userID},
+	}
+	for _, flow := range flows {
+		db.Create(&flow)
+	}
+
+	t.Run("Success", func(t *testing.T) {
+		req, _ := http.NewRequest("GET", "/flows", nil)
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+
+		assert.Equal(t, http.StatusOK, w.Code)
+
+		var response []models.Flow
+		err := json.Unmarshal(w.Body.Bytes(), &response)
+		assert.NoError(t, err)
+		assert.Len(t, response, 2)
+	})
+
+	t.Run("Unauthorized", func(t *testing.T) {
+		unauthRouter := gin.Default()
+		unauthRouter.Use(func(c *gin.Context) {
+			c.Set("db", db)
+		})
+		unauthRouter.GET("/flows", handlers.GetUserFlows)
+
+		req, _ := http.NewRequest("GET", "/flows", nil)
+		w := httptest.NewRecorder()
+		unauthRouter.ServeHTTP(w, req)
+
+		assert.Equal(t, http.StatusUnauthorized, w.Code)
+	})
+
+	t.Run("Empty List", func(t *testing.T) {
+		newUser := models.User{
+			ID:       uuid.New(),
+			Email:    "new@example.com",
+			Password: "password",
+		}
+		db.Create(&newUser)
+
+		newUserRouter := gin.Default()
+		newUserRouter.Use(func(c *gin.Context) {
+			c.Set("db", db)
+			c.Set("userID", newUser.ID.String())
+		})
+		newUserRouter.GET("/flows", handlers.GetUserFlows)
+
+		req, _ := http.NewRequest("GET", "/flows", nil)
+		w := httptest.NewRecorder()
+		newUserRouter.ServeHTTP(w, req)
+
+		assert.Equal(t, http.StatusOK, w.Code)
+
+		var response []models.Flow
+		err := json.Unmarshal(w.Body.Bytes(), &response)
+		assert.NoError(t, err)
+		assert.Empty(t, response)
+	})
+}
 func TestGetFlow_Integration(t *testing.T) {
 	router, db := setupTestEnvironment()
 	defer db.Migrator().DropTable(&models.Flow{}, &models.User{})
@@ -152,5 +218,52 @@ func getTestUserID(db *gorm.DB) uuid.UUID {
 	var user models.User
 	db.Where("email = ?", "test@example.com").First(&user)
 	return user.ID
+func TestDeleteFlow_Integration(t *testing.T) {
+	router, db, userID := setupTestEnvironment()
+	defer db.Migrator().DropTable(&models.Flow{}, &models.User{})
+
+	t.Run("Success", func(t *testing.T) {
+		flow := models.Flow{
+			ID:     uuid.New(),
+			Title:  "Flow to Delete",
+			UserID: userID,
+		}
+		db.Create(&flow)
+
+		req, _ := http.NewRequest("DELETE", "/flows/"+flow.ID.String(), nil)
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+
+		assert.Equal(t, http.StatusOK, w.Code)
+
+		var dbFlow models.Flow
+		result := db.First(&dbFlow, flow.ID)
+		assert.Error(t, result.Error)
+		assert.Equal(t, gorm.ErrRecordNotFound, result.Error)
+	})
+
+	t.Run("Not Found", func(t *testing.T) {
+		nonExistentID := uuid.New()
+		req, _ := http.NewRequest("DELETE", "/flows/"+nonExistentID.String(), nil)
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+
+		assert.Equal(t, http.StatusNotFound, w.Code)
+	})
+
+	t.Run("Unauthorized", func(t *testing.T) {
+		otherUserFlow := models.Flow{
+			ID:     uuid.New(),
+			Title:  "Other User Flow",
+			UserID: uuid.New(),
+		}
+		db.Create(&otherUserFlow)
+
+		req, _ := http.NewRequest("DELETE", "/flows/"+otherUserFlow.ID.String(), nil)
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+
+		assert.Equal(t, http.StatusNotFound, w.Code)
+	})
 }
 
