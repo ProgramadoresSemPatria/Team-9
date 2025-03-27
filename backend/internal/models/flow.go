@@ -6,3 +6,8 @@ type Flow struct {
 	UserID uuid.UUID `json:"user_id" gorm:"type:uuid"`
 	User   User      `json:"user" gorm:"foreignKey:UserID;references:ID"`
 }
+type FlowInput struct {
+	Title string `json:"title" binding:"required"`
+	Level string `json:"level" binding:"required"`
+	Cover string `json:"cover"`
+}
