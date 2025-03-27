@@ -16,7 +16,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func setupTestEnvironment() (*gin.Engine, *gorm.DB) {
+func setupTestEnvironment() (*gin.Engine, *gorm.DB, uuid.UUID) {
 	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
@@ -39,9 +39,12 @@ func setupTestEnvironment() (*gin.Engine, *gorm.DB) {
 	})
 
 	router.POST("/flows", handlers.CreateFlow)
+	router.GET("/flows", handlers.GetUserFlows)
 	router.GET("/flows/:id", handlers.GetFlow)
+	router.PUT("/flows/:id", handlers.UpdateFlow)
+	router.DELETE("/flows/:id", handlers.DeleteFlow)
 
-	return router, db
+	return router, db, testUser.ID
 }
 
 func TestCreateFlow_Integration(t *testing.T) {
