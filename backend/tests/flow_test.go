@@ -214,10 +214,89 @@ func TestGetFlow_Integration(t *testing.T) {
 	})
 }
 
-func getTestUserID(db *gorm.DB) uuid.UUID {
-	var user models.User
-	db.Where("email = ?", "test@example.com").First(&user)
-	return user.ID
+func TestUpdateFlow_Integration(t *testing.T) {
+	router, db, userID := setupTestEnvironment()
+	defer db.Migrator().DropTable(&models.Flow{}, &models.User{})
+
+	flow := models.Flow{
+		ID:     uuid.New(),
+		Title:  "Original Title",
+		Level:  "beginner",
+		UserID: userID,
+	}
+	db.Create(&flow)
+
+	t.Run("Success", func(t *testing.T) {
+		requestBody := bytes.NewBufferString(`{
+			"title": "Updated Title",
+			"level": "advanced",
+			"cover": "new-cover.jpg"
+		}`)
+
+		req, _ := http.NewRequest("PUT", "/flows/"+flow.ID.String(), requestBody)
+		req.Header.Set("Content-Type", "application/json")
+
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+
+		assert.Equal(t, http.StatusOK, w.Code)
+
+		var response models.Flow
+		err := json.Unmarshal(w.Body.Bytes(), &response)
+		assert.NoError(t, err)
+		assert.Equal(t, "Updated Title", response.Title)
+		assert.Equal(t, "advanced", response.Level)
+
+		var dbFlow models.Flow
+		db.First(&dbFlow, flow.ID)
+		assert.Equal(t, "Updated Title", dbFlow.Title)
+	})
+
+	t.Run("Not Found", func(t *testing.T) {
+		nonExistentID := uuid.New()
+		requestBody := bytes.NewBufferString(`{"title": "Updated"}`)
+
+		req, _ := http.NewRequest("PUT", "/flows/"+nonExistentID.String(), requestBody)
+		req.Header.Set("Content-Type", "application/json")
+
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+
+		assert.Equal(t, http.StatusNotFound, w.Code)
+	})
+
+	t.Run("Unauthorized", func(t *testing.T) {
+		otherUserFlow := models.Flow{
+			ID:     uuid.New(),
+			Title:  "Other User Flow",
+			UserID: uuid.New(),
+		}
+		db.Create(&otherUserFlow)
+
+		requestBody := bytes.NewBufferString(`{"title": "Try to update"}`)
+
+		req, _ := http.NewRequest("PUT", "/flows/"+otherUserFlow.ID.String(), requestBody)
+		req.Header.Set("Content-Type", "application/json")
+
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+
+		assert.Equal(t, http.StatusNotFound, w.Code)
+	})
+
+	t.Run("Invalid Input", func(t *testing.T) {
+		requestBody := bytes.NewBufferString(`{"invalid": "json"`)
+
+		req, _ := http.NewRequest("PUT", "/flows/"+flow.ID.String(), requestBody)
+		req.Header.Set("Content-Type", "application/json")
+
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+
+		assert.Equal(t, http.StatusBadRequest, w.Code)
+	})
+}
+
 func TestDeleteFlow_Integration(t *testing.T) {
 	router, db, userID := setupTestEnvironment()
 	defer db.Migrator().DropTable(&models.Flow{}, &models.User{})
