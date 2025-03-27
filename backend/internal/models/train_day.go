@@ -9,9 +9,9 @@ import (
 
 type WorkoutDay struct {
 	ID        uuid.UUID `json:"id,omitempty"`
-	Title     string    `json:"title"`
-	Day       string    `json:"day"`
-	Duration  string    `json:"duration"`
+	Title     string    `json:"title" gorm:"size:255;not null"`
+	Day       string    `json:"day" gorm:"size:50;not null"`
+	Duration  string    `json:"duration" gorm:"size:50;not null"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	UserID    uuid.UUID `json:"user_id" gorm:"type:uuid;not null;index"`
