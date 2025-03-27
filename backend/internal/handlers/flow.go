@@ -30,3 +30,21 @@ func CreateFlow(c *gin.Context) {
 	c.JSON(http.StatusCreated, flow)
 }
 
+func GetUserFlows(c *gin.Context) {
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
+		return
+	}
+
+	db := c.MustGet("db").(*gorm.DB)
+	var flows []models.Flow
+
+	if err := db.Preload("User").Where("user_id = ?", userID).Find(&flows).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch flows"})
+		return
+	}
+
+	c.JSON(http.StatusOK, flows)
+}
+
