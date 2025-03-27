@@ -19,8 +19,8 @@ type Flow struct {
 }
 
 type FlowInput struct {
-	Title string `json:"title" binding:"required"`
-	Level string `json:"level" binding:"required"`
+	Title string `json:"title" binding:"required,min=3,max=255"`
+	Level string `json:"level" binding:"required,oneof=beginner intermediate advanced"`
 	Cover string `json:"cover"`
 }
 
