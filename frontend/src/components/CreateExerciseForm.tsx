@@ -66,7 +66,7 @@ const CreateExerciseForm = ({ setExercises }: CreateExerciseFormProps) => {
                     </p>
                 )}
             </div>
-            <div className="flex w-full items-end justify-between px-3">
+            <div className="flex w-full items-end justify-between">
                 <div>
                     <label htmlFor="repetitions" className="">
                         Repetitions
