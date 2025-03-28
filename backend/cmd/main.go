@@ -50,18 +50,14 @@ func main() {
 		c.Next()
 	})
 
-	// Public routes
 	r.POST("/register", handlers.CreateUserHandler)
 	r.POST("/login", handlers.LoginHandler)
 
-	// Auth routes group
 	authGroup := r.Group("/")
 	authGroup.Use(handlers.AuthMiddleware())
 	{
-		// User routes
 		authGroup.GET("/profile", handlers.ProfileHandler)
 
-		// Flow routes - IMPORTANT: Add this inside the auth group
 		authGroup.POST("/flows", handlers.CreateFlow)
 		authGroup.GET("/flows", handlers.GetUserFlows)
 		authGroup.GET("/flows/:id", handlers.GetFlow)
