@@ -57,3 +57,40 @@ func GetWorkoutDaysByFlow(c *gin.Context) {
 	c.JSON(http.StatusOK, workoutDays)
 }
 
+func UpdateWorkoutDay(c *gin.Context) {
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
+		return
+	}
+
+	id := c.Param("id")
+	db := c.MustGet("db").(*gorm.DB)
+
+	var existingWorkoutDay models.WorkoutDay
+	if err := db.First(&existingWorkoutDay, "id = ? AND user_id = ?", id, userID).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Workout day not found or not owned by user"})
+		return
+	}
+
+	var input models.WorkouDayInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	updates := map[string]interface{}{
+		"title":      input.Title,
+		"day":        input.Day,
+		"duration":   input.Duration,
+		"updated_at": time.Now(),
+	}
+
+	if err := db.Model(&existingWorkoutDay).Updates(updates).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update workout day"})
+		return
+	}
+
+	db.Preload("User").Preload("Flow").First(&existingWorkoutDay, existingWorkoutDay.ID)
+	c.JSON(http.StatusOK, existingWorkoutDay)
+}
