@@ -1,3 +1,21 @@
+package tests
+
+import (
+	"bytes"
+	"encoding/json"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+
+	"github.com/ProgramadoresSemPatria/Team-9/internal/handlers"
+	"github.com/ProgramadoresSemPatria/Team-9/internal/models"
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
+)
+
 func setupWorkoutDayTestEnvironment() (*gin.Engine, *gorm.DB, uuid.UUID, uuid.UUID) {
 	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
 	if err != nil {
@@ -35,6 +53,7 @@ func setupWorkoutDayTestEnvironment() (*gin.Engine, *gorm.DB, uuid.UUID, uuid.UU
 
 	return router, db, testUser.ID, testFlow.ID
 }
+
 func TestCreateWorkoutDay_Integration(t *testing.T) {
 	router, db, userID, flowID := setupWorkoutDayTestEnvironment()
 	defer db.Migrator().DropTable(&models.WorkoutDay{}, &models.User{}, &models.Flow{})
@@ -80,6 +99,7 @@ func TestCreateWorkoutDay_Integration(t *testing.T) {
 		assert.Equal(t, http.StatusBadRequest, w.Code)
 	})
 }
+
 func TestGetWorkoutDay_Integration(t *testing.T) {
 	router, db, _, flowID := setupWorkoutDayTestEnvironment()
 	defer db.Migrator().DropTable(&models.WorkoutDay{}, &models.User{}, &models.Flow{})
@@ -94,17 +114,22 @@ func TestGetWorkoutDay_Integration(t *testing.T) {
 	}
 	db.Create(&workoutDay)
 
-	t.Run("Success", func(t *testing.T) {
+	t.Run("Success with existing workout day", func(t *testing.T) {
 		req, _ := http.NewRequest("GET", "/workout-days/"+workoutDay.ID.String(), nil)
 		w := httptest.NewRecorder()
 		router.ServeHTTP(w, req)
 
-		assert.Equal(t, http.StatusOK, w.Code)
+		if !assert.Equal(t, http.StatusOK, w.Code) {
+			return
+		}
 
 		var response models.WorkoutDay
 		err := json.Unmarshal(w.Body.Bytes(), &response)
 		assert.NoError(t, err)
 		assert.Equal(t, workoutDay.ID, response.ID)
+		assert.Equal(t, "Test Workout", response.Title)
+	})
+
 	t.Run("Nonexistent workout day returns 404", func(t *testing.T) {
 		nonexistentID := uuid.New()
 		req, _ := http.NewRequest("GET", "/workout-days/"+nonexistentID.String(), nil)
@@ -272,6 +297,7 @@ func TestDeleteWorkoutDay_Integration(t *testing.T) {
 		assert.Equal(t, http.StatusNotFound, w.Code)
 	})
 }
+
 func getTestUserID(db *gorm.DB) uuid.UUID {
 	var user models.User
 	db.Where("email = ?", "test@example.com").First(&user)
