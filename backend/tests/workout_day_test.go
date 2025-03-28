@@ -272,4 +272,8 @@ func TestDeleteWorkoutDay_Integration(t *testing.T) {
 		assert.Equal(t, http.StatusNotFound, w.Code)
 	})
 }
+func getTestUserID(db *gorm.DB) uuid.UUID {
+	var user models.User
+	db.Where("email = ?", "test@example.com").First(&user)
+	return user.ID
 }
