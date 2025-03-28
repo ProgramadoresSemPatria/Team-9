@@ -35,3 +35,34 @@ func setupWorkoutDayTestEnvironment() (*gin.Engine, *gorm.DB, uuid.UUID, uuid.UU
 
 	return router, db, testUser.ID, testFlow.ID
 }
+func TestCreateWorkoutDay_Integration(t *testing.T) {
+	router, db, userID, flowID := setupWorkoutDayTestEnvironment()
+	defer db.Migrator().DropTable(&models.WorkoutDay{}, &models.User{}, &models.Flow{})
+
+	t.Run("Success", func(t *testing.T) {
+		requestBody := bytes.NewBufferString(`{
+			"title": "Leg Day",
+			"day": "Monday",
+			"duration": "60 minutes"
+		}`)
+
+		req, _ := http.NewRequest("POST", "/flows/"+flowID.String()+"/workout-days", requestBody)
+		req.Header.Set("Content-Type", "application/json")
+
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+
+		assert.Equal(t, http.StatusCreated, w.Code)
+
+		var response models.WorkoutDay
+		err := json.Unmarshal(w.Body.Bytes(), &response)
+		assert.NoError(t, err)
+		assert.Equal(t, "Leg Day", response.Title)
+
+		var dbWorkoutDay models.WorkoutDay
+		db.Preload("User").Preload("Flow").First(&dbWorkoutDay, response.ID)
+		assert.Equal(t, userID, dbWorkoutDay.UserID)
+		assert.Equal(t, flowID, dbWorkoutDay.FlowID)
+	})
+
+}
