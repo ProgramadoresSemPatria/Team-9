@@ -158,6 +158,80 @@ func TestGetWorkoutDaysByFlow_Integration(t *testing.T) {
 		assert.Empty(t, response)
 	})
 }
+
+func TestUpdateWorkoutDay_Integration(t *testing.T) {
+	router, db, _, flowID := setupWorkoutDayTestEnvironment()
+	defer db.Migrator().DropTable(&models.WorkoutDay{}, &models.User{}, &models.Flow{})
+
+	workoutDay := models.WorkoutDay{
+		ID:       uuid.New(),
+		Title:    "Original Title",
+		Day:      "Friday",
+		Duration: "30 minutes",
+		UserID:   getTestUserID(db),
+		FlowID:   flowID,
+	}
+	db.Create(&workoutDay)
+
+	t.Run("Success with valid input", func(t *testing.T) {
+		requestBody := bytes.NewBufferString(`{
+			"title": "Updated Title",
+			"day": "Friday",
+			"duration": "45 minutes"
+		}`)
+
+		req, _ := http.NewRequest("PUT", "/workout-days/"+workoutDay.ID.String(), requestBody)
+		req.Header.Set("Content-Type", "application/json")
+
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+
+		if !assert.Equal(t, http.StatusOK, w.Code) {
+			return
+		}
+
+		var response models.WorkoutDay
+		err := json.Unmarshal(w.Body.Bytes(), &response)
+		assert.NoError(t, err)
+		assert.Equal(t, "Updated Title", response.Title)
+		assert.Equal(t, "45 minutes", response.Duration)
+
+		var dbWorkoutDay models.WorkoutDay
+		db.First(&dbWorkoutDay, workoutDay.ID)
+		assert.Equal(t, "Updated Title", dbWorkoutDay.Title)
 	})
+
+	t.Run("Invalid input returns 400", func(t *testing.T) {
+		requestBody := bytes.NewBufferString(`{
+			"title": "",
+			"duration": "45 minutes"
+		}`)
+
+		req, _ := http.NewRequest("PUT", "/workout-days/"+workoutDay.ID.String(), requestBody)
+		req.Header.Set("Content-Type", "application/json")
+
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+
+		assert.Equal(t, http.StatusBadRequest, w.Code)
+	})
+
+	t.Run("Nonexistent workout day returns 404", func(t *testing.T) {
+		nonexistentID := uuid.New()
+		requestBody := bytes.NewBufferString(`{
+			"title": "New Title",
+			"day": "Monday",
+			"duration": "60 minutes"
+		}`)
+
+		req, _ := http.NewRequest("PUT", "/workout-days/"+nonexistentID.String(), requestBody)
+		req.Header.Set("Content-Type", "application/json")
+
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+
+		assert.Equal(t, http.StatusNotFound, w.Code)
+	})
+}
 
 }
