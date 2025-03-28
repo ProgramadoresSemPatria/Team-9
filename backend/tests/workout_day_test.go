@@ -66,3 +66,31 @@ func TestCreateWorkoutDay_Integration(t *testing.T) {
 	})
 
 }
+func TestGetWorkoutDay_Integration(t *testing.T) {
+	router, db, _, flowID := setupWorkoutDayTestEnvironment()
+	defer db.Migrator().DropTable(&models.WorkoutDay{}, &models.User{}, &models.Flow{})
+
+	workoutDay := models.WorkoutDay{
+		ID:       uuid.New(),
+		Title:    "Test Workout",
+		Day:      "Tuesday",
+		Duration: "45 minutes",
+		UserID:   getTestUserID(db),
+		FlowID:   flowID,
+	}
+	db.Create(&workoutDay)
+
+	t.Run("Success", func(t *testing.T) {
+		req, _ := http.NewRequest("GET", "/workout-days/"+workoutDay.ID.String(), nil)
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+
+		assert.Equal(t, http.StatusOK, w.Code)
+
+		var response models.WorkoutDay
+		err := json.Unmarshal(w.Body.Bytes(), &response)
+		assert.NoError(t, err)
+		assert.Equal(t, workoutDay.ID, response.ID)
+	})
+
+}
