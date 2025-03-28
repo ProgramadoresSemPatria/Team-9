@@ -6,6 +6,7 @@ import SignInPage from './pages/SignIn';
 import AddNewFlowPage from './pages/AddNewFlow';
 import AddNewTrainingDayPage from './pages/AddNewTrainingDay';
 import WorkoutInfo from './pages/WorkoutInfo';
+import FlowDetailsPage from './pages/FlowDetails';
 
 function App() {
     return (
@@ -16,6 +17,7 @@ function App() {
                     <Route path="add-new-flow" element={<AddNewFlowPage />} />
                     <Route path="add-new-day" element={<AddNewTrainingDayPage />} />
                     <Route path="workout-info" element={<WorkoutInfo />} />
+                    <Route path="flow-details" element={<FlowDetailsPage />} />
                 </Route>
                 <Route path="register" element={<RegisterPage />} />
                 <Route path="sign-in" element={<SignInPage />} />
