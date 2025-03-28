@@ -1,3 +1,15 @@
+package handlers
+
+import (
+	"net/http"
+	"time"
+
+	"github.com/ProgramadoresSemPatria/Team-9/internal/models"
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"gorm.io/gorm"
+)
+
 func CreateWorkoutDay(c *gin.Context) {
 	userID, exists := c.Get("userID")
 	if !exists {
@@ -31,6 +43,7 @@ func CreateWorkoutDay(c *gin.Context) {
 	db.Preload("User").Preload("Flow").First(&workoutDay, workoutDay.ID)
 	c.JSON(http.StatusCreated, workoutDay)
 }
+
 func GetWorkoutDay(c *gin.Context) {
 	id := c.Param("id")
 	db := c.MustGet("db").(*gorm.DB)
@@ -93,4 +106,28 @@ func UpdateWorkoutDay(c *gin.Context) {
 
 	db.Preload("User").Preload("Flow").First(&existingWorkoutDay, existingWorkoutDay.ID)
 	c.JSON(http.StatusOK, existingWorkoutDay)
+}
+
+func DeleteWorkoutDay(c *gin.Context) {
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
+		return
+	}
+
+	id := c.Param("id")
+	db := c.MustGet("db").(*gorm.DB)
+
+	var workoutDay models.WorkoutDay
+	if err := db.First(&workoutDay, "id = ? AND user_id = ?", id, userID).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Workout day not found or not owned by user"})
+		return
+	}
+
+	if err := db.Delete(&workoutDay).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete workout day"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Workout day deleted successfully"})
 }
