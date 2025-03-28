@@ -39,7 +39,7 @@ func TestCreateWorkoutDay_Integration(t *testing.T) {
 	router, db, userID, flowID := setupWorkoutDayTestEnvironment()
 	defer db.Migrator().DropTable(&models.WorkoutDay{}, &models.User{}, &models.Flow{})
 
-	t.Run("Success", func(t *testing.T) {
+	t.Run("Success with valid flow", func(t *testing.T) {
 		requestBody := bytes.NewBufferString(`{
 			"title": "Leg Day",
 			"day": "Monday",
@@ -65,6 +65,20 @@ func TestCreateWorkoutDay_Integration(t *testing.T) {
 		assert.Equal(t, flowID, dbWorkoutDay.FlowID)
 	})
 
+	t.Run("Invalid input returns 400", func(t *testing.T) {
+		requestBody := bytes.NewBufferString(`{
+			"title": "",
+			"day": "Monday"
+		}`)
+
+		req, _ := http.NewRequest("POST", "/flows/"+flowID.String()+"/workout-days", requestBody)
+		req.Header.Set("Content-Type", "application/json")
+
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+
+		assert.Equal(t, http.StatusBadRequest, w.Code)
+	})
 }
 func TestGetWorkoutDay_Integration(t *testing.T) {
 	router, db, _, flowID := setupWorkoutDayTestEnvironment()
