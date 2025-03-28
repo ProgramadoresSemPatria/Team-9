@@ -114,6 +114,50 @@ func TestGetWorkoutDay_Integration(t *testing.T) {
 		assert.Equal(t, http.StatusNotFound, w.Code)
 	})
 }
+
+func TestGetWorkoutDaysByFlow_Integration(t *testing.T) {
+	router, db, _, flowID := setupWorkoutDayTestEnvironment()
+	defer db.Migrator().DropTable(&models.WorkoutDay{}, &models.User{}, &models.Flow{})
+
+	workoutDays := []models.WorkoutDay{
+		{ID: uuid.New(), Title: "Day 1", Day: "Monday", Duration: "60 mins", UserID: getTestUserID(db), FlowID: flowID},
+		{ID: uuid.New(), Title: "Day 2", Day: "Wednesday", Duration: "45 mins", UserID: getTestUserID(db), FlowID: flowID},
+	}
+	for _, wd := range workoutDays {
+		db.Create(&wd)
+	}
+
+	t.Run("Success with existing flow", func(t *testing.T) {
+		req, _ := http.NewRequest("GET", "/flows/"+flowID.String()+"/workout-days", nil)
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+
+		if !assert.Equal(t, http.StatusOK, w.Code) {
+			return
+		}
+
+		var response []models.WorkoutDay
+		err := json.Unmarshal(w.Body.Bytes(), &response)
+		assert.NoError(t, err)
+		assert.Len(t, response, 2)
+	})
+
+	t.Run("Empty list for new flow returns 200", func(t *testing.T) {
+		newFlowID := uuid.New()
+		req, _ := http.NewRequest("GET", "/flows/"+newFlowID.String()+"/workout-days", nil)
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+
+		if !assert.Equal(t, http.StatusOK, w.Code) {
+			return
+		}
+
+		var response []models.WorkoutDay
+		err := json.Unmarshal(w.Body.Bytes(), &response)
+		assert.NoError(t, err)
+		assert.Empty(t, response)
+	})
+}
 	})
 
 }
