@@ -60,9 +60,6 @@ func main() {
 
 		authGroup.POST("/flows", handlers.CreateFlow)
 		authGroup.GET("/flows", handlers.GetUserFlows)
-		authGroup.GET("/flows/:id", handlers.GetFlow)
-		authGroup.PUT("/flows/:id", handlers.UpdateFlow)
-		authGroup.DELETE("/flows/:id", handlers.DeleteFlow)
 	}
 
 	http.ListenAndServe(fmt.Sprintf(":%s", config.GetServerPort()), r)
