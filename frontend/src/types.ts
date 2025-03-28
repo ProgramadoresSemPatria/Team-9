@@ -5,3 +5,11 @@ export type Exercise = {
     repetitions: number;
     sets: number;
 };
+
+export type TrainingDay = {
+    id?: string;
+    title: string;
+    dayOfWeek: string;
+    exercises: number; //Exercise[]
+    duration: number;
+};
