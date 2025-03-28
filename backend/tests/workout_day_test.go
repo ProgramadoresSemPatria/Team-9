@@ -234,4 +234,42 @@ func TestUpdateWorkoutDay_Integration(t *testing.T) {
 	})
 }
 
+func TestDeleteWorkoutDay_Integration(t *testing.T) {
+	router, db, _, flowID := setupWorkoutDayTestEnvironment()
+	defer db.Migrator().DropTable(&models.WorkoutDay{}, &models.User{}, &models.Flow{})
+
+	t.Run("Success with existing workout day", func(t *testing.T) {
+		workoutDay := models.WorkoutDay{
+			ID:       uuid.New(),
+			Title:    "To Delete",
+			Day:      "Sunday",
+			Duration: "60 minutes",
+			UserID:   getTestUserID(db),
+			FlowID:   flowID,
+		}
+		db.Create(&workoutDay)
+
+		req, _ := http.NewRequest("DELETE", "/workout-days/"+workoutDay.ID.String(), nil)
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+
+		if !assert.Equal(t, http.StatusOK, w.Code) {
+			return
+		}
+
+		var dbWorkoutDay models.WorkoutDay
+		result := db.First(&dbWorkoutDay, workoutDay.ID)
+		assert.Error(t, result.Error)
+		assert.Equal(t, gorm.ErrRecordNotFound, result.Error)
+	})
+
+	t.Run("Nonexistent workout day returns 404", func(t *testing.T) {
+		nonexistentID := uuid.New()
+		req, _ := http.NewRequest("DELETE", "/workout-days/"+nonexistentID.String(), nil)
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+
+		assert.Equal(t, http.StatusNotFound, w.Code)
+	})
+}
 }
