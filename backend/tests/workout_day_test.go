@@ -105,6 +105,15 @@ func TestGetWorkoutDay_Integration(t *testing.T) {
 		err := json.Unmarshal(w.Body.Bytes(), &response)
 		assert.NoError(t, err)
 		assert.Equal(t, workoutDay.ID, response.ID)
+	t.Run("Nonexistent workout day returns 404", func(t *testing.T) {
+		nonexistentID := uuid.New()
+		req, _ := http.NewRequest("GET", "/workout-days/"+nonexistentID.String(), nil)
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+
+		assert.Equal(t, http.StatusNotFound, w.Code)
+	})
+}
 	})
 
 }
