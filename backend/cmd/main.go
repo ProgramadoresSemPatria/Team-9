@@ -60,6 +60,20 @@ func main() {
 
 		authGroup.POST("/flows", handlers.CreateFlow)
 		authGroup.GET("/flows", handlers.GetUserFlows)
+
+		flowRoutes := authGroup.Group("/flows/:id")
+		{
+			flowRoutes.GET("/", handlers.GetFlow)
+			flowRoutes.PUT("/", handlers.UpdateFlow)
+			flowRoutes.DELETE("/", handlers.DeleteFlow)
+
+			flowRoutes.POST("/workout-days", handlers.CreateWorkoutDay)
+			flowRoutes.GET("/workout-days", handlers.GetWorkoutDaysByFlow)
+		}
+
+		authGroup.GET("/workout-days/:id", handlers.GetWorkoutDay)
+		authGroup.PUT("/workout-days/:id", handlers.UpdateWorkoutDay)
+		authGroup.DELETE("/workout-days/:id", handlers.DeleteWorkoutDay)
 	}
 
 	http.ListenAndServe(fmt.Sprintf(":%s", config.GetServerPort()), r)
