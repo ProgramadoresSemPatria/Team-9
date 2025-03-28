@@ -10,7 +10,7 @@ func setupWorkoutDayTestEnvironment() (*gin.Engine, *gorm.DB, uuid.UUID, uuid.UU
 		ID:       uuid.New(),
 		Email:    "test@example.com",
 		Password: "hashed_password",
-		Name:     "test",
+		Name:     "Test User",
 	}
 	db.Create(&testUser)
 
