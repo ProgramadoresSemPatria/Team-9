@@ -1,13 +1,16 @@
 import { z } from 'zod';
 import { addNewFlowSchema } from '../schemas/addNewFlow';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 
 type AddNewFlowForm = z.infer<typeof addNewFlowSchema>;
 
 const AddNewFlow = () => {
     const [isLoading, setIsLoading] = useState(false);
+
+    const navigate = useNavigate();
 
     const {
         register,
@@ -17,10 +20,11 @@ const AddNewFlow = () => {
         resolver: zodResolver(addNewFlowSchema),
     });
 
-    const onSubmit: SubmitHandler<RegisterForm> = async (registerParams) => {
+    const onSubmit: SubmitHandler<AddNewFlowForm> = async (registerParams) => {
         setIsLoading(true);
         try {
             console.log(registerParams);
+            navigate('/flow-details'); //se a requisição der certo
         } catch (error) {
             console.error(error);
         } finally {
