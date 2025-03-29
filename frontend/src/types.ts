@@ -43,7 +43,6 @@ export type CreateTrainingDay = {
     flowId: string;
     title: string;
     dayOfWeek: string;
-    exercises: Exercise[];
     duration: number;
 };
 
