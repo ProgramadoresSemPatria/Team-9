@@ -42,7 +42,7 @@ const AddNewFlow = () => {
             }
 
             console.log(response.data);
-            navigate('/flow-details');
+            navigate(`/flow-details/${response.data.id}`);
         } catch (error) {
             console.error(error);
         } finally {
