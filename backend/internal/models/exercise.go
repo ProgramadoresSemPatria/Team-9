@@ -17,8 +17,8 @@ type Exercise struct {
 	WorkoutDay   WorkoutDay `json:"workout_day" gorm:"foreignKey:WorkoutDayID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	UserID       uuid.UUID  `json:"user_id" gorm:"type:uuid;not null;index"`
 	User         User       `json:"user" gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime"`
-	UpdatedAt time.Time `json:"updated_at" gorm:"autoUpdateTime"`
+	CreatedAt    time.Time  `json:"created_at" gorm:"autoCreateTime"`
+	UpdatedAt    time.Time  `json:"updated_at" gorm:"autoUpdateTime"`
 }
 
 type ExerciseInput struct {
