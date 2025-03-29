@@ -4,18 +4,16 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
-	"testing"
 	"net/http/httptest"
+	"testing"
 
 	"github.com/ProgramadoresSemPatria/Team-9/internal/handlers"
 	"github.com/ProgramadoresSemPatria/Team-9/internal/models"
 	"github.com/gin-gonic/gin"
-	"gorm.io/driver/sqlite"
 	"github.com/stretchr/testify/assert"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
-
-
 
 func setupRouter() (*gin.Engine, *gorm.DB) {
 	db, _ := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
@@ -30,7 +28,6 @@ func setupRouter() (*gin.Engine, *gorm.DB) {
 	router.GET("/profile", handlers.AuthMiddleware(), handlers.ProfileHandler)
 	return router, db
 }
-
 
 func TestCreateUserHandler(t *testing.T) {
 	router, db := setupRouter()
@@ -55,9 +52,9 @@ func TestLoginHandler(t *testing.T) {
 	router, db := setupRouter()
 	defer db.Exec("DROP TABLE users")
 
-	userInput := models.SignInInput{Name: "Teste" , Email: "test@example.com", Password: "password123"}
+	userInput := models.SignInInput{Email: "test@example.com", Password: "password123"}
 	hashedPassword, _ := handlers.HashPassword(userInput.Password)
-	db.Create(&models.User{Name: userInput.Name ,Email: userInput.Email, Password: hashedPassword, Verified: true})
+	db.Create(&models.User{Email: userInput.Email, Password: hashedPassword, Verified: true})
 
 	body, _ := json.Marshal(userInput)
 	req, _ := http.NewRequest("POST", "/login", bytes.NewBuffer(body))
@@ -72,14 +69,13 @@ func TestLoginHandler(t *testing.T) {
 
 }
 
-
 func TestProfileHandler(t *testing.T) {
 	router, db := setupRouter()
 	defer db.Exec("DROP TABLE users")
 
-	userInput := models.SignInInput{Name: "Teste", Email: "test@example.com", Password: "password123"}
+	userInput := models.SignInInput{Email: "test@example.com", Password: "password123"}
 	hashedPassword, _ := handlers.HashPassword(userInput.Password)
-	db.Create(&models.User{Name: userInput.Name , Email: userInput.Email, Password: hashedPassword, Verified: true})
+	db.Create(&models.User{Email: userInput.Email, Password: hashedPassword, Verified: true})
 
 	loginBody, _ := json.Marshal(userInput)
 	reqLogin, _ := http.NewRequest("POST", "/login", bytes.NewBuffer(loginBody))
@@ -97,7 +93,6 @@ func TestProfileHandler(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, wProfile.Code)
 }
-
 
 func TestAuthMiddleware(t *testing.T) {
 	router, _ := setupRouter()
