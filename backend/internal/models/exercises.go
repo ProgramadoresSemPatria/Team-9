@@ -18,3 +18,10 @@ type Exercise struct {
 	UpdatedAt    time.Time  `json:"updated_at" gorm:"autoUpdateTime"`
 }
 
+type ExerciseInput struct {
+	Title       string `json:"title" binding:"required,min=3,max=255"`
+	MuscleGroup string `json:"muscle_group" binding:"required,min=3,max=255"`
+	Repetitions int64  `json:"repetitions" binding:"required,min=3,max=255"`
+	Sets        int64  `json:"sets" binding:"required,min=3,max=255"`
+}
+
