@@ -52,9 +52,28 @@ func main() {
 
 	r.POST("/register", handlers.CreateUserHandler)
 	r.POST("/login", handlers.LoginHandler)
-	authorized := r.Group("/", handlers.AuthMiddleware())
+
+	authGroup := r.Group("/")
+	authGroup.Use(handlers.AuthMiddleware())
 	{
-		authorized.GET("/profile", handlers.ProfileHandler)
+		authGroup.GET("/profile", handlers.ProfileHandler)
+
+		authGroup.POST("/flows", handlers.CreateFlow)
+		authGroup.GET("/flows", handlers.GetUserFlows)
+
+		flowRoutes := authGroup.Group("/flows/:id")
+		{
+			flowRoutes.GET("/", handlers.GetFlow)
+			flowRoutes.PUT("/", handlers.UpdateFlow)
+			flowRoutes.DELETE("/", handlers.DeleteFlow)
+
+			flowRoutes.POST("/workout-days", handlers.CreateWorkoutDay)
+			flowRoutes.GET("/workout-days", handlers.GetWorkoutDaysByFlow)
+		}
+
+		authGroup.GET("/workout-days/:id", handlers.GetWorkoutDay)
+		authGroup.PUT("/workout-days/:id", handlers.UpdateWorkoutDay)
+		authGroup.DELETE("/workout-days/:id", handlers.DeleteWorkoutDay)
 	}
 
 	http.ListenAndServe(fmt.Sprintf(":%s", config.GetServerPort()), r)
