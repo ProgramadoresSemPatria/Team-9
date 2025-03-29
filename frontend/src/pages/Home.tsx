@@ -41,17 +41,18 @@ const flowsMock: Flow[] = [
 
 const HomePage = () => {
     const [inputValue, setInputValue] = useState('');
-    const [flowsFounded, setFlowsFounded] = useState<Flow[]>();
+    const [flowsFinds, setFlowsFinds] = useState<Flow[]>();
 
     const handleSearchFlow = () => {
+        if (!inputValue.trim()) {
+            return;
+        }
         const flows = flowsMock.filter((flow) =>
             flow.title.toLowerCase().includes(inputValue.toLowerCase())
         );
-        setFlowsFounded(flows);
+        setFlowsFinds(flows);
         setInputValue('');
     };
-
-    console.log(flowsFounded);
 
     return (
         <>
@@ -70,6 +71,12 @@ const HomePage = () => {
                     >
                         <img src={searchIcon} alt="search" />
                     </button>
+                </div>
+                <div className="mb-3 flex w-full gap-4 overflow-x-auto px-8">
+                    {flowsFinds &&
+                        flowsFinds.map((flow) => (
+                            <FlowItem key={flow.id} flow={flow} />
+                        ))}
                 </div>
                 <div className="h-64 w-full bg-[#808080]"></div>
                 <div className="flex h-64 w-full flex-col gap-2.5 p-8">
