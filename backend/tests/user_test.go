@@ -36,7 +36,7 @@ func TestCreateUserHandler(t *testing.T) {
 	router, db := setupRouter()
 	defer db.Exec("DROP TABLE users")
 
-	userInput := models.SignInInput{Name: "Teste" , Email: "test@example.com", Password: "password123"}
+	userInput := models.RegisterInput{Name: "Teste", Email: "test@example.com", Password: "password123"}
 	body, _ := json.Marshal(userInput)
 
 	req, _ := http.NewRequest("POST", "/create", bytes.NewBuffer(body))
