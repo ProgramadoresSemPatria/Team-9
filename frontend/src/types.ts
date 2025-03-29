@@ -48,7 +48,7 @@ export type CreateTrainingDay = {
 };
 
 export type CreateFlow = {
-    userId: string;
     title: string;
-    level: string;
+    level: 'beginner' | 'intermediate' | 'advanced';
+    cover?: File;
 };
