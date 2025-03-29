@@ -26,6 +26,12 @@ type WorkouDayInput struct {
 	Duration string `json:"duration" binding:"required,min=3,max=50"`
 }
 
+type WorkouDayUpdate struct {
+	Title    string `json:"title" binding:"min=3,max=255"`
+	Day      string `json:"day" binding:"min=3,max=50"`
+	Duration string `json:"duration" binding:"min=3,max=50"`
+}
+
 func (w *WorkoutDay) BeforeCreate(d *gorm.DB) (err error) {
 	w.ID = uuid.New()
 	return
