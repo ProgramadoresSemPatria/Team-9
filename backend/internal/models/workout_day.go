@@ -20,10 +20,16 @@ type WorkoutDay struct {
 	Flow      Flow      `json:"flow" gorm:"foreignKey:FlowID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
-type WorkouDayInput struct {
+type WorkoutDayInput struct {
 	Title    string `json:"title" binding:"required,min=3,max=255"`
 	Day      string `json:"day" binding:"required,min=3,max=50"`
 	Duration string `json:"duration" binding:"required,min=3,max=50"`
+}
+
+type WorkoutDayUpdate struct {
+	Title    string `json:"title"`
+	Day      string `json:"day"`
+	Duration string `json:"duration"`
 }
 
 func (w *WorkoutDay) BeforeCreate(d *gorm.DB) (err error) {
