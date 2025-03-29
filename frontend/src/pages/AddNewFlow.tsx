@@ -4,11 +4,14 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import createFlow from '../services/flows/create';
+import Cookies from 'js-cookie';
 
 type AddNewFlowForm = z.infer<typeof addNewFlowSchema>;
 
 const AddNewFlow = () => {
     const [isLoading, setIsLoading] = useState(false);
+    const [cover, setCover] = useState<File>();
 
     const navigate = useNavigate();
 
@@ -20,15 +23,38 @@ const AddNewFlow = () => {
         resolver: zodResolver(addNewFlowSchema),
     });
 
-    const onSubmit: SubmitHandler<AddNewFlowForm> = async (registerParams) => {
+    const onSubmit: SubmitHandler<AddNewFlowForm> = async (createFlowParams) => {
         setIsLoading(true);
         try {
-            console.log(registerParams);
-            navigate('/flow-details'); //se a requisição der certo
+            const createFlowObject = {
+                ...createFlowParams,
+                cover: cover,
+            };
+
+            const token = Cookies.get('auth_token');
+
+            if (!token) throw new Error('JWT token invalid');
+
+            const response = await createFlow(createFlowObject, token);
+
+            if (response?.status !== 201) {
+                throw new Error('Error to create flow');
+            }
+
+            console.log(response.data);
+            navigate(`/flow-details/${response.data.id}`);
         } catch (error) {
             console.error(error);
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const selectedFile = e.target.files;
+
+        if (selectedFile) {
+            setCover(selectedFile[0]);
         }
     };
 
@@ -72,19 +98,17 @@ const AddNewFlow = () => {
                         <select
                             id="workoutLevel"
                             className={`mt-1 block rounded-md border bg-white px-3 py-2 placeholder-gray-400 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none ${
-                                errors.workoutLevel
-                                    ? 'border-red-500'
-                                    : 'border-gray-300'
+                                errors.level ? 'border-red-500' : 'border-gray-300'
                             }`}
-                            {...register('workoutLevel')}
+                            {...register('level')}
                         >
                             <option value="beginner">Beginner</option>
                             <option value="intermediate">Intermediate</option>
                             <option value="advanced">Advanced</option>
                         </select>
-                        {errors.workoutLevel && (
+                        {errors.level && (
                             <p className="mt-1 text-sm text-red-600">
-                                {errors.workoutLevel.message}
+                                {errors.level.message}
                             </p>
                         )}
                     </div>
@@ -99,12 +123,8 @@ const AddNewFlow = () => {
                                 errors.cover ? 'border-red-500' : 'border-gray-300'
                             }`}
                             {...register('cover')}
+                            onChange={handleFileChange}
                         />
-                        {errors.cover && (
-                            <p className="mt-1 text-sm text-red-600">
-                                {errors.cover.message}
-                            </p>
-                        )}
                     </div>
                     <button
                         type="submit"
