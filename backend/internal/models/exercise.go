@@ -15,8 +15,10 @@ type Exercise struct {
 	Sets         int64      `json:"sets" gorm:"size:255;not null"`
 	WorkoutDayID uuid.UUID  `json:"workout_day_id" gorm:"type:uuid;not null;index"`
 	WorkoutDay   WorkoutDay `json:"workout_day" gorm:"foreignKey:WorkoutDayID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	CreatedAt    time.Time  `json:"created_at" gorm:"autoCreateTime"`
-	UpdatedAt    time.Time  `json:"updated_at" gorm:"autoUpdateTime"`
+	UserID       uuid.UUID  `json:"user_id" gorm:"type:uuid;not null;index"`
+	User         User       `json:"user" gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime"`
+	UpdatedAt time.Time `json:"updated_at" gorm:"autoUpdateTime"`
 }
 
 type ExerciseInput struct {
