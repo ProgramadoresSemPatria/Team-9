@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { signInSchema } from '../schemas/signIn';
 import login from '../services/user/login';
+import Cookies from 'js-cookie';
 
 type SignInForm = z.infer<typeof signInSchema>;
 
@@ -29,8 +30,10 @@ const SignInPage = () => {
             if (response?.status !== 200) {
                 throw new Error('Error to log in');
             }
-
             console.log(response.data);
+            const token = response.data.token;
+
+            Cookies.set('auth_token', token, { expires: 7 });
             navigate('/');
         } catch (error) {
             console.error(error);
