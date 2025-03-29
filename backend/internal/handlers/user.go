@@ -37,7 +37,7 @@ func GenerateToken(user models.User) (string, error) {
 }
 
 func CreateUserHandler(c *gin.Context) {
-	var input models.SignInInput
+	var input models.RegisterInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
