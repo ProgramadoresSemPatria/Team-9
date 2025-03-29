@@ -95,11 +95,17 @@ func UpdateFlow(c *gin.Context) {
 		return
 	}
 
-	updates := map[string]interface{}{
-		"title":      input.Title,
-		"level":      input.Level,
-		"cover":      input.Cover,
-		"updated_at": time.Now(),
+	updates := make(map[string]interface{})
+	updates["updated_at"] = time.Now()
+
+	if input.Title != "" {
+		updates["title"] = input.Title
+	}
+	if input.Level != "" {
+		updates["level"] = input.Level
+	}
+	if input.Cover != "" {
+		updates["cover"] = input.Cover
 	}
 
 	if err := db.Model(&existingFlow).Updates(updates).Error; err != nil {
