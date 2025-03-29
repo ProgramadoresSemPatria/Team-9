@@ -25,3 +25,7 @@ type ExerciseInput struct {
 	Sets        int64  `json:"sets" binding:"required,min=3,max=255"`
 }
 
+func (e *Exercise) BeforeCreate(d *gorm.DB) (err error) {
+	e.ID = uuid.New()
+	return
+}
