@@ -89,7 +89,7 @@ func UpdateFlow(c *gin.Context) {
 		return
 	}
 
-	var input models.FlowInput
+	var input models.FlowUpdate
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
