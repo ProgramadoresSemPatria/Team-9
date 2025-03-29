@@ -63,7 +63,7 @@ const HomePage = () => {
                         placeholder="Search for flows..."
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
-                        className="h-10 w-72 rounded-md border py-2.5 pl-3"
+                        className="h-10 w-72 rounded-md bg-white py-3 pl-3"
                     />
                     <button
                         onClick={handleSearchFlow}
