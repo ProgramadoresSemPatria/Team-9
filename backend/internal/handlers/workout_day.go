@@ -86,17 +86,23 @@ func UpdateWorkoutDay(c *gin.Context) {
 		return
 	}
 
-	var input models.WorkouDayInput
+	var input models.WorkoutDayInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	updates := map[string]interface{}{
-		"title":      input.Title,
-		"day":        input.Day,
-		"duration":   input.Duration,
-		"updated_at": time.Now(),
+	updates := make(map[string]interface{})
+	updates["updated_at"] = time.Now()
+
+	if input.Title != "" {
+		updates["title"] = input.Title
+	}
+	if input.Day != "" {
+		updates["day"] = input.Day
+	}
+	if input.Duration != "" {
+		updates["duration"] = input.Duration
 	}
 
 	if err := db.Model(&existingWorkoutDay).Updates(updates).Error; err != nil {
