@@ -1,6 +1,6 @@
 import { api } from '../../lib/axios';
 
-const getFlows = async (token: string) => {
+const getFlowsByUser = async (token: string) => {
     try {
         const response = await api.get(`/flows`, {
             headers: {
@@ -14,4 +14,4 @@ const getFlows = async (token: string) => {
     }
 };
 
-export default getFlows;
+export default getFlowsByUser;
