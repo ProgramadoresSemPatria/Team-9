@@ -86,7 +86,7 @@ func UpdateWorkoutDay(c *gin.Context) {
 		return
 	}
 
-	var input models.WorkoutDayInput
+	var input models.WorkoutDayUpdate
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
