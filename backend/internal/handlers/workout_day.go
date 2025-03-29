@@ -17,8 +17,8 @@ func CreateWorkoutDay(c *gin.Context) {
 		return
 	}
 
-	flowID := c.Param("flowId")
 	var input models.WorkouDayInput
+	flowID := c.Param("id")
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
