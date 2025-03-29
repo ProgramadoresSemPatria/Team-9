@@ -1,37 +1,40 @@
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import plusIcon from '../assets/plus.svg';
 import TrainingDayContainer from '../components/TrainingDayContainer';
-
-const daysOfTraining = [
-    {
-        id: '1',
-        title: 'Peito e ombro',
-        dayOfWeek: 'Monday',
-        exercises: 3,
-        duration: 45,
-    },
-    {
-        id: '2',
-        title: 'Costas e bíceps',
-        dayOfWeek: 'Wednesday',
-        exercises: 5,
-        duration: 30,
-    },
-    {
-        id: '3',
-        title: 'Pernas',
-        dayOfWeek: 'Friday',
-        exercises: 3,
-        duration: 60,
-    },
-];
+import { useEffect, useState } from 'react';
+import getTrainingDayByFlowId from '../services/trainingDay/getByFlowId';
+import Cookies from 'js-cookie';
+import { TrainingDay } from '../types';
 
 const FlowDetailsPage = () => {
+    const [daysOfTraining, setDaysOfTraining] = useState<TrainingDay[]>([]);
+
+    const { id } = useParams();
+
+    if (!id) return;
+
     const navigate = useNavigate();
 
     const handleClick = () => {
-        navigate('/add-new-day');
+        navigate(`/add-new-day/${id}`);
     };
+
+    useEffect(() => {
+        const getDaysOfTraining = async (flowId: string) => {
+            const token = Cookies.get('auth_token');
+
+            if (!token) throw new Error('JWT token invalid');
+
+            const response = await getTrainingDayByFlowId(flowId, token);
+
+            console.log(response?.data);
+
+            if (response?.status === 200) {
+                setDaysOfTraining(response.data);
+            }
+        };
+        getDaysOfTraining(id);
+    }, []);
 
     return (
         <div className="flex w-full flex-col p-7 md:items-center">
