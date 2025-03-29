@@ -5,7 +5,9 @@ const HeaderLayout = () => {
     return (
         <>
             <Header />
-            <Outlet />
+            <div className="bg-[#F4F4F4]">
+                <Outlet />
+            </div>
         </>
     );
 };
