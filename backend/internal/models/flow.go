@@ -24,6 +24,12 @@ type FlowInput struct {
 	Cover string `json:"cover"`
 }
 
+type FlowUpdate struct {
+	Title string `json:"title" binding:"min=3,max=255"`
+	Level string `json:"level"`
+	Cover string `json:"cover"`
+}
+
 func (f *Flow) BeforeCreate(d *gorm.DB) (err error) {
 	f.ID = uuid.New()
 	return
