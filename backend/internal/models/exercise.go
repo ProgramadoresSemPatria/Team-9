@@ -28,6 +28,13 @@ type ExerciseInput struct {
 	Sets        int64  `json:"sets" binding:"required,min=3,max=255"`
 }
 
+type ExerciseuUpdateInput struct {
+	Title       string `json:"title"`
+	MuscleGroup string `json:"muscle_group"`
+	Repetitions int64  `json:"repetitions"`
+	Sets        int64  `json:"sets"`
+}
+
 func (e *Exercise) BeforeCreate(d *gorm.DB) (err error) {
 	e.ID = uuid.New()
 	return
