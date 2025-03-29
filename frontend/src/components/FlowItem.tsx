@@ -6,7 +6,7 @@ type FlowItemProps = {
 
 const FlowItem = ({ flow }: FlowItemProps) => {
     return (
-        <div className="flex h-64 max-w-52 min-w-52 flex-col justify-between rounded-lg bg-zinc-100 p-5">
+        <div className="flex h-64 max-w-52 min-w-52 flex-col justify-between rounded-lg bg-white p-5">
             <div className="h-42 rounded-lg bg-gray-300"></div>
             <div className="flex flex-col gap-0.5">
                 <h3 className="text-sm font-bold text-black">{flow.title}</h3>
