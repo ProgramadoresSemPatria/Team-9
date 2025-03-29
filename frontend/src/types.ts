@@ -13,3 +13,9 @@ export type TrainingDay = {
     exercises: number; //Exercise[]
     duration: number;
 };
+
+export type Flow = {
+    id?: string;
+    title: string;
+    level: string;
+};
