@@ -90,30 +90,12 @@ const AddNewFlow = () => {
                             </p>
                         )}
                     </div>
-                    <div className="flex flex-col gap-1.5">
-                        <label htmlFor="cover" className="text-sm font-medium">
-                            Cover
-                        </label>
-                        <input
-                            type="file"
-                            id="cover"
-                            className={`mt-1 block rounded-md border bg-white px-3 py-2 placeholder-gray-400 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none ${
-                                errors.cover ? 'border-red-500' : 'border-gray-300'
-                            }`}
-                            {...register('cover')}
-                        />
-                        {errors.cover && (
-                            <p className="mt-1 text-sm text-red-600">
-                                {errors.cover.message}
-                            </p>
-                        )}
-                    </div>
                     <button
                         type="submit"
                         disabled={isLoading}
                         className="mt-2 cursor-pointer rounded-md bg-black px-4 py-2 font-medium text-white"
                     >
-                        Criar
+                        Create
                     </button>
                 </form>
             </div>
