@@ -3,12 +3,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { registerSchema } from '../schemas/register';
 import { useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
+import registerUser from '../services/user/register';
 
 type RegisterForm = z.infer<typeof registerSchema>;
 
 const RegisterPage = () => {
     const [isLoading, setIsLoading] = useState(false);
+
+    const navigate = useNavigate();
 
     const {
         register,
@@ -22,6 +25,15 @@ const RegisterPage = () => {
         setIsLoading(true);
         try {
             console.log(registerParams);
+
+            const response = await registerUser(registerParams);
+
+            if (response?.status !== 201) {
+                throw new Error('Error to register');
+            }
+
+            console.log(response.data);
+            navigate('/sign-in');
         } catch (error) {
             console.error(error);
         } finally {

@@ -1,40 +1,58 @@
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import plusIcon from '../assets/plus.svg';
 import TrainingDayContainer from '../components/TrainingDayContainer';
-
-const daysOfTraining = [
-    {
-        id: '1',
-        title: 'Peito e ombro',
-        dayOfWeek: 'Monday',
-        exercises: 3,
-        duration: 45,
-    },
-    {
-        id: '2',
-        title: 'Costas e bíceps',
-        dayOfWeek: 'Wednesday',
-        exercises: 5,
-        duration: 30,
-    },
-    {
-        id: '3',
-        title: 'Pernas',
-        dayOfWeek: 'Friday',
-        exercises: 3,
-        duration: 60,
-    },
-];
+import { useEffect, useState } from 'react';
+import getTrainingDayByFlowId from '../services/trainingDay/getByFlowId';
+import Cookies from 'js-cookie';
+import { Flow, TrainingDay } from '../types';
+import getFlowById from '../services/flows/getById';
 
 const FlowDetailsPage = () => {
+    const [flow, setFlow] = useState<Flow>();
+    const [daysOfTraining, setDaysOfTraining] = useState<TrainingDay[]>([]);
+
+    const { id } = useParams();
+
+    if (!id) return;
+
     const navigate = useNavigate();
 
     const handleClick = () => {
-        navigate('/add-new-day');
+        navigate(`/add-new-day/${id}`);
     };
+
+    useEffect(() => {
+        const token = Cookies.get('auth_token');
+
+        if (!token) throw new Error('JWT token invalid');
+
+        const getFlow = async (flowId: string) => {
+            const response = await getFlowById(flowId, token);
+
+            if (response?.status === 200) {
+                setFlow(response.data);
+            }
+        };
+
+        const getDaysOfTraining = async (flowId: string) => {
+            const response = await getTrainingDayByFlowId(flowId, token);
+
+            if (response?.status === 200) {
+                setDaysOfTraining(response.data);
+            }
+        };
+
+        getDaysOfTraining(id);
+        getFlow(id);
+    }, []);
 
     return (
         <div className="flex w-full flex-col items-center p-7">
+
+            <div className="mb-4 flex w-full flex-col gap-2 md:items-center">
+                <h1 className="text-2xl font-bold">{flow?.title}</h1>
+                <h3 className="text-xl">{flow?.level}</h3>
+            </div>
             <div className="flex flex-col items-center gap-4">
                 <div className="mb-4 flex w-full flex-col gap-2">
                     <h1 className="text-2xl font-bold">Flow name</h1>

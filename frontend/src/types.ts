@@ -19,3 +19,34 @@ export type Flow = {
     title: string;
     level: string;
 };
+
+export type RegisterUser = {
+    name: string;
+    email: string;
+    password: string;
+};
+
+export type Login = {
+    email: string;
+    password: string;
+};
+
+export type CreateExercise = {
+    trainingDayId: string;
+    title: string;
+    muscle: string;
+    repetitions: number;
+    sets: number;
+};
+
+export type CreateTrainingDay = {
+    title: string;
+    day: string;
+    duration: number;
+};
+
+export type CreateFlow = {
+    title: string;
+    level: 'beginner' | 'intermediate' | 'advanced';
+    cover?: File;
+};

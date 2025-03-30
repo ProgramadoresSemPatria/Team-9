@@ -3,6 +3,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { createNewTrainingDaySchema } from '../schemas/trainingDay';
 import { Exercise } from '../types';
+import { useState } from 'react';
+import Cookies from 'js-cookie';
+import createTrainingDay from '../services/trainingDay/create';
+import { useNavigate, useParams } from 'react-router';
 
 type CreateNewTrainingDayFormType = z.infer<typeof createNewTrainingDaySchema>;
 
@@ -15,6 +19,14 @@ const CreateNewTrainingDayForm = ({
     exercises,
     setOpenAddExerciseDialog,
 }: CreateNewTrainingDayFormProps) => {
+    const [isLoading, setIsLoading] = useState(false);
+
+    const { id } = useParams();
+
+    if (!id) return;
+
+    const navigate = useNavigate();
+
     const {
         register,
         handleSubmit,
@@ -26,8 +38,29 @@ const CreateNewTrainingDayForm = ({
     const onSubmit: SubmitHandler<CreateNewTrainingDayFormType> = async (
         createNewTrainingDayParams
     ) => {
-        console.log(createNewTrainingDayParams);
-        console.log(exercises);
+        setIsLoading(true);
+        try {
+            const token = Cookies.get('auth_token');
+
+            if (!token) throw new Error('JWT token invalid');
+
+            const response = await createTrainingDay(
+                createNewTrainingDayParams,
+                id,
+                token
+            );
+
+            if (response?.status !== 201) {
+                throw new Error('Error to create flow');
+            }
+
+            console.log(response.data);
+            navigate('/flow-details');
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoading(false);
+        }
     };
     return (
         <form
@@ -92,7 +125,7 @@ const CreateNewTrainingDayForm = ({
                         className={`mt-1 h-10 w-36 rounded-md border bg-white px-3 py-2 placeholder-gray-400 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none ${
                             errors.duration ? 'border-red-500' : 'border-gray-300'
                         }`}
-                        {...register('duration', { valueAsNumber: true })}
+                        {...register('duration')}
                     />
                     {errors.duration && (
                         <p className="mt-1 text-sm text-red-600">
@@ -106,12 +139,14 @@ const CreateNewTrainingDayForm = ({
                 <button
                     className="w-full cursor-pointer rounded-md bg-black px-3 py-2 text-xl text-white shadow-sm transition-colors duration-200 hover:bg-gradient-to-r hover:from-red-500 hover:to-purple-500 hover:transition hover:duration-500 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                     onClick={() => setOpenAddExerciseDialog()}
+                    disabled={isLoading}
                 >
                     Add exercise
                 </button>
                 <button
                     type="submit"
                     className="flex h-10 w-full cursor-pointer items-center justify-center rounded-md bg-black px-3 py-2 text-lg text-white transition-transform hover:bg-gradient-to-r hover:from-red-500 hover:to-purple-500 hover:transition hover:duration-500"
+                    disabled={isLoading}
                 >
                     Save
                 </button>
