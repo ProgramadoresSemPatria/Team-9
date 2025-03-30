@@ -38,11 +38,19 @@ func main() {
 	corsOrigin := os.Getenv("CORS")
 
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:  []string{corsOrigin},
-		AllowMethods:  []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:  []string{"Origin", "Content-Type", "Accept"},
-		ExposeHeaders: []string{"Content-Length"},
-		MaxAge:        12 * time.Hour,
+		AllowOrigins: []string{corsOrigin},
+		AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"},
+		AllowHeaders: []string{
+			"Origin",
+			"Content-Type",
+			"Accept",
+			"Authorization",
+			"X-Requested-With",
+			"Access-Control-Allow-Headers",
+		},
+		ExposeHeaders:    []string{"Content-Length", "Authorization"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
 	}))
 
 	r.Use(func(c *gin.Context) {
@@ -50,30 +58,52 @@ func main() {
 		c.Next()
 	})
 
+	// Public routes (no authentication required)
 	r.POST("/register", handlers.CreateUserHandler)
 	r.POST("/login", handlers.LoginHandler)
 
+	// Authenticated routes group (all routes below require valid JWT)
 	authGroup := r.Group("/")
-	authGroup.Use(handlers.AuthMiddleware())
+	authGroup.Use(handlers.AuthMiddleware()) // Apply authentication middleware to all routes in this group
 	{
+		// User profile routes
 		authGroup.GET("/profile", handlers.ProfileHandler)
 
+		// Flow management routes
 		authGroup.POST("/flows", handlers.CreateFlow)
 		authGroup.GET("/flows", handlers.GetUserFlows)
 
-		flowRoutes := authGroup.Group("/flows/:id")
+		// Flow-specific routes (operate on a single flow)
+		flowRoutes := authGroup.Group("/flows/:id") // :id = flow ID parameter
 		{
 			flowRoutes.GET("/", handlers.GetFlow)
 			flowRoutes.PUT("/", handlers.UpdateFlow)
 			flowRoutes.DELETE("/", handlers.DeleteFlow)
 
+			// Workout day routes under a flow
 			flowRoutes.POST("/workout-days", handlers.CreateWorkoutDay)
 			flowRoutes.GET("/workout-days", handlers.GetWorkoutDaysByFlow)
 		}
 
-		authGroup.GET("/workout-days/:id", handlers.GetWorkoutDay)
-		authGroup.PUT("/workout-days/:id", handlers.UpdateWorkoutDay)
-		authGroup.DELETE("/workout-days/:id", handlers.DeleteWorkoutDay)
+		// Workout day-specific routes (operate on a single workout day)
+		workoutDayRoutes := authGroup.Group("/workout-days/:id") // :id = workout day ID
+		{
+			workoutDayRoutes.GET("/", handlers.GetWorkoutDay)
+			workoutDayRoutes.PUT("/", handlers.UpdateWorkoutDay)
+			workoutDayRoutes.DELETE("/", handlers.DeleteWorkoutDay)
+
+			// Exercise routes under a workout day
+			workoutDayRoutes.POST("/exercises", handlers.CreateExercise)
+			workoutDayRoutes.GET("/exercises", handlers.GetExercisesByWorkoutDay)
+		}
+
+		// Exercise-specific routes (operate on a single exercise)
+		exerciseRoutes := authGroup.Group("/exercises/:id") // :id = exercise ID
+		{
+			exerciseRoutes.GET("/", handlers.GetExercise)
+			exerciseRoutes.PUT("/", handlers.UpdateExercise)
+			exerciseRoutes.DELETE("/", handlers.DeleteExercise)
+		}
 	}
 
 	http.ListenAndServe(fmt.Sprintf(":%s", config.GetServerPort()), r)
