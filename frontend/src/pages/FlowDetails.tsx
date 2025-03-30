@@ -34,12 +34,12 @@ const FlowDetailsPage = () => {
     };
 
     return (
-        <div className="flex w-full flex-col p-7 md:items-center">
-            <div className="mb-4 flex w-full flex-col gap-2 md:items-center">
-                <h1 className="text-2xl font-bold">Flow name</h1>
-                <h3 className="text-xl">Level</h3>
-            </div>
+        <div className="flex w-full flex-col items-center p-7">
             <div className="flex flex-col items-center gap-4">
+                <div className="mb-4 flex w-full flex-col gap-2">
+                    <h1 className="text-2xl font-bold">Flow name</h1>
+                    <h3 className="text-xl text-gray-500">Level</h3>
+                </div>
                 {daysOfTraining.length > 0 ? (
                     daysOfTraining.map((trainingDay) => (
                         <TrainingDayContainer
@@ -52,16 +52,14 @@ const FlowDetailsPage = () => {
                 )}
                 <button
                     onClick={handleClick}
-                    className="w-full cursor-pointer rounded-md border border-transparent bg-black px-2 py-2 text-xl text-white shadow-sm transition-colors duration-200 hover:bg-gray-800 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:w-64"
+                    className="flex w-full cursor-pointer items-center justify-center rounded-md bg-white p-3 text-xl text-black shadow-sm transition-colors duration-200 hover:bg-gradient-to-r hover:from-red-500 hover:to-purple-500 hover:text-white hover:transition hover:duration-500 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                    <div className="relative flex w-full items-center justify-center">
-                        <img
-                            src={plusIcon}
-                            alt="plus"
-                            className="absolute left-0 h-6 w-6"
-                        />
-                        <span className="text-lg">Add training day</span>
+                    <div className="flex items-center justify-center rounded-md bg-black p-3">
+                        <img src={plusIcon} alt="plus" className="h-6 w-6" />
                     </div>
+                    <span className="flex-grow text-lg font-medium">
+                        Add training day
+                    </span>
                 </button>
             </div>
         </div>
