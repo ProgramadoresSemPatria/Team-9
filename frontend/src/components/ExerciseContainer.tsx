@@ -13,7 +13,7 @@ const ExerciseContainer = ({ exercise, onDeleteClick }: ExerciseContainerProps) 
                 <div className="flex justify-between rounded-md rounded-tl-md rounded-tr-4xl rounded-br-md rounded-bl-4xl bg-white p-4">
                     <div className="flex flex-col gap-2">
                         <span>
-                            {exercise.title} • {exercise.muscle}
+                            {exercise.title} • {exercise.muscle_group}
                         </span>
                         <span className="text-gray-500">
                             Reps: {exercise.repetitions} • Sets: {exercise.sets}

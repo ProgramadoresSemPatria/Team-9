@@ -11,5 +11,5 @@ export const createNewTrainingDaySchema = z.object({
         'Saturday',
         'Sunday',
     ]),
-    duration: z.string(),
+    duration: z.number().positive(),
 });

@@ -1,7 +1,7 @@
 export type Exercise = {
     id?: string;
     title: string;
-    muscle: string;
+    muscle_group: string;
     repetitions: number;
     sets: number;
 };
@@ -32,9 +32,8 @@ export type Login = {
 };
 
 export type CreateExercise = {
-    trainingDayId: string;
     title: string;
-    muscle: string;
+    muscle_group: string;
     repetitions: number;
     sets: number;
 };

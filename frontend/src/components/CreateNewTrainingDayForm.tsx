@@ -7,6 +7,7 @@ import { useState } from 'react';
 import Cookies from 'js-cookie';
 import createTrainingDay from '../services/trainingDay/create';
 import { useNavigate, useParams } from 'react-router';
+import createExercise from '../services/exercises/create';
 
 type CreateNewTrainingDayFormType = z.infer<typeof createNewTrainingDaySchema>;
 
@@ -54,8 +55,29 @@ const CreateNewTrainingDayForm = ({
                 throw new Error('Error to create flow');
             }
 
-            console.log(response.data);
-            navigate('/flow-details');
+            const trainingDayId = response.data.id;
+            let error = false;
+
+            for (const exercise of exercises) {
+                const createExerciseParams = { ...exercise, id: undefined };
+
+                console.log(createExerciseParams.muscle_group);
+
+                const response = await createExercise(
+                    createExerciseParams,
+                    trainingDayId,
+                    token
+                );
+
+                if (response?.status !== 201) {
+                    error = true;
+                    throw new Error('Error to create exercise');
+                }
+            }
+
+            if (error) return;
+
+            navigate(`/flow-details/${response.data.flow_id}`);
         } catch (error) {
             console.error(error);
         } finally {
