@@ -58,7 +58,7 @@ func GetWorkoutDay(c *gin.Context) {
 }
 
 func GetWorkoutDaysByFlow(c *gin.Context) {
-	flowID := c.Param("flowId")
+	flowID := c.Param("id")
 	db := c.MustGet("db").(*gorm.DB)
 
 	var workoutDays []models.WorkoutDay
