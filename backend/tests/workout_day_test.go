@@ -45,9 +45,10 @@ func setupWorkoutDayTestEnvironment() (*gin.Engine, *gorm.DB, uuid.UUID, uuid.UU
 		c.Set("userID", testUser.ID.String())
 	})
 
-	router.POST("/flows/:flowId/workout-days", handlers.CreateWorkoutDay)
+	// Match app routes
+	router.POST("/flows/:id/workout-days", handlers.CreateWorkoutDay)
 	router.GET("/workout-days/:id", handlers.GetWorkoutDay)
-	router.GET("/flows/:flowId/workout-days", handlers.GetWorkoutDaysByFlow)
+	router.GET("/flows/:id/workout-days", handlers.GetWorkoutDaysByFlow)
 	router.PUT("/workout-days/:id", handlers.UpdateWorkoutDay)
 	router.DELETE("/workout-days/:id", handlers.DeleteWorkoutDay)
 
@@ -62,7 +63,7 @@ func TestCreateWorkoutDay_Integration(t *testing.T) {
 		requestBody := bytes.NewBufferString(`{
 			"title": "Leg Day",
 			"day": "Monday",
-			"duration": "60 minutes"
+			"duration": 60
 		}`)
 
 		req, _ := http.NewRequest("POST", "/flows/"+flowID.String()+"/workout-days", requestBody)
@@ -108,7 +109,7 @@ func TestGetWorkoutDay_Integration(t *testing.T) {
 		ID:       uuid.New(),
 		Title:    "Test Workout",
 		Day:      "Tuesday",
-		Duration: "45 minutes",
+		Duration: 45,
 		UserID:   getTestUserID(db),
 		FlowID:   flowID,
 	}
@@ -119,9 +120,7 @@ func TestGetWorkoutDay_Integration(t *testing.T) {
 		w := httptest.NewRecorder()
 		router.ServeHTTP(w, req)
 
-		if !assert.Equal(t, http.StatusOK, w.Code) {
-			return
-		}
+		assert.Equal(t, http.StatusOK, w.Code)
 
 		var response models.WorkoutDay
 		err := json.Unmarshal(w.Body.Bytes(), &response)
@@ -145,8 +144,8 @@ func TestGetWorkoutDaysByFlow_Integration(t *testing.T) {
 	defer db.Migrator().DropTable(&models.WorkoutDay{}, &models.User{}, &models.Flow{})
 
 	workoutDays := []models.WorkoutDay{
-		{ID: uuid.New(), Title: "Day 1", Day: "Monday", Duration: "60 mins", UserID: getTestUserID(db), FlowID: flowID},
-		{ID: uuid.New(), Title: "Day 2", Day: "Wednesday", Duration: "45 mins", UserID: getTestUserID(db), FlowID: flowID},
+		{ID: uuid.New(), Title: "Day 1", Day: "Monday", Duration: 60, UserID: getTestUserID(db), FlowID: flowID},
+		{ID: uuid.New(), Title: "Day 2", Day: "Wednesday", Duration: 45, UserID: getTestUserID(db), FlowID: flowID},
 	}
 	for _, wd := range workoutDays {
 		db.Create(&wd)
@@ -157,9 +156,7 @@ func TestGetWorkoutDaysByFlow_Integration(t *testing.T) {
 		w := httptest.NewRecorder()
 		router.ServeHTTP(w, req)
 
-		if !assert.Equal(t, http.StatusOK, w.Code) {
-			return
-		}
+		assert.Equal(t, http.StatusOK, w.Code)
 
 		var response []models.WorkoutDay
 		err := json.Unmarshal(w.Body.Bytes(), &response)
@@ -173,9 +170,7 @@ func TestGetWorkoutDaysByFlow_Integration(t *testing.T) {
 		w := httptest.NewRecorder()
 		router.ServeHTTP(w, req)
 
-		if !assert.Equal(t, http.StatusOK, w.Code) {
-			return
-		}
+		assert.Equal(t, http.StatusOK, w.Code)
 
 		var response []models.WorkoutDay
 		err := json.Unmarshal(w.Body.Bytes(), &response)
@@ -192,7 +187,7 @@ func TestUpdateWorkoutDay_Integration(t *testing.T) {
 		ID:       uuid.New(),
 		Title:    "Original Title",
 		Day:      "Friday",
-		Duration: "30 minutes",
+		Duration: 30,
 		UserID:   getTestUserID(db),
 		FlowID:   flowID,
 	}
@@ -202,7 +197,7 @@ func TestUpdateWorkoutDay_Integration(t *testing.T) {
 		requestBody := bytes.NewBufferString(`{
 			"title": "Updated Title",
 			"day": "Friday",
-			"duration": "45 minutes"
+			"duration": 45
 		}`)
 
 		req, _ := http.NewRequest("PUT", "/workout-days/"+workoutDay.ID.String(), requestBody)
@@ -211,15 +206,13 @@ func TestUpdateWorkoutDay_Integration(t *testing.T) {
 		w := httptest.NewRecorder()
 		router.ServeHTTP(w, req)
 
-		if !assert.Equal(t, http.StatusOK, w.Code) {
-			return
-		}
+		assert.Equal(t, http.StatusOK, w.Code)
 
 		var response models.WorkoutDay
 		err := json.Unmarshal(w.Body.Bytes(), &response)
 		assert.NoError(t, err)
 		assert.Equal(t, "Updated Title", response.Title)
-		assert.Equal(t, "45 minutes", response.Duration)
+		assert.EqualValues(t, 45, response.Duration)
 
 		var dbWorkoutDay models.WorkoutDay
 		db.First(&dbWorkoutDay, workoutDay.ID)
@@ -229,7 +222,7 @@ func TestUpdateWorkoutDay_Integration(t *testing.T) {
 	t.Run("Invalid input returns 400", func(t *testing.T) {
 		requestBody := bytes.NewBufferString(`{
 			"title": "",
-			"duration": "45 minutes"
+			"duration": 45
 		}`)
 
 		req, _ := http.NewRequest("PUT", "/workout-days/"+workoutDay.ID.String(), requestBody)
@@ -246,7 +239,7 @@ func TestUpdateWorkoutDay_Integration(t *testing.T) {
 		requestBody := bytes.NewBufferString(`{
 			"title": "New Title",
 			"day": "Monday",
-			"duration": "60 minutes"
+			"duration": 60
 		}`)
 
 		req, _ := http.NewRequest("PUT", "/workout-days/"+nonexistentID.String(), requestBody)
@@ -268,7 +261,7 @@ func TestDeleteWorkoutDay_Integration(t *testing.T) {
 			ID:       uuid.New(),
 			Title:    "To Delete",
 			Day:      "Sunday",
-			Duration: "60 minutes",
+			Duration: 60,
 			UserID:   getTestUserID(db),
 			FlowID:   flowID,
 		}
@@ -278,9 +271,7 @@ func TestDeleteWorkoutDay_Integration(t *testing.T) {
 		w := httptest.NewRecorder()
 		router.ServeHTTP(w, req)
 
-		if !assert.Equal(t, http.StatusOK, w.Code) {
-			return
-		}
+		assert.Equal(t, http.StatusOK, w.Code)
 
 		var dbWorkoutDay models.WorkoutDay
 		result := db.First(&dbWorkoutDay, workoutDay.ID)
@@ -300,6 +291,8 @@ func TestDeleteWorkoutDay_Integration(t *testing.T) {
 
 func getTestUserID(db *gorm.DB) uuid.UUID {
 	var user models.User
-	db.Where("email = ?", "test@example.com").First(&user)
+	if err := db.Where("email = ?", "test@example.com").First(&user).Error; err != nil {
+		panic("Test user not found")
+	}
 	return user.ID
 }
