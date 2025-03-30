@@ -58,11 +58,11 @@ const HomePage = () => {
                         placeholder="Search for flows..."
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
-                        className="h-10 w-72 flex-grow rounded-md bg-white py-3 pl-3"
+                        className="h-10 w-72 flex-grow rounded-md border-2 border-gray-200 bg-white py-3 pl-3"
                     />
                     <button
                         onClick={handleSearchFlow}
-                        className="flex cursor-pointer items-center justify-center gap-2 rounded-md border-transparent bg-black px-3 py-3 shadow-sm transition-colors duration-200 hover:bg-gray-800 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none md:py-2"
+                        className="flex cursor-pointer items-center justify-center gap-2 rounded-md border-transparent bg-black px-3 py-3 shadow-sm transition-colors duration-200 hover:bg-gray-800 hover:bg-gradient-to-r hover:from-red-500 hover:to-purple-500 hover:transition hover:duration-500 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none md:py-2"
                     >
                         <img src={searchIcon} alt="search" />
                         <span className="hidden text-white md:inline-block">
