@@ -17,11 +17,10 @@ import (
 
 func main() {
 	if err := godotenv.Load(".env"); err != nil {
-		fmt.Println("⚠️ .env file not found, assuming production environment")
+		fmt.Println("⚠️  .env file not found, assuming production environment")
 	}
 
-	err = config.Load()
-	if err != nil {
+	if err := config.Load(); err != nil {
 		panic(fmt.Sprintf("Failed to load configuration: %v", err))
 	}
 
