@@ -60,8 +60,10 @@ const AddNewFlow = () => {
 
     return (
         <section className="flex min-h-screen w-full flex-col items-center gap-5 px-8">
-            <h1 className="w-full text-left text-lg font-bold">New Flow</h1>
             <div>
+                <h1 className="mt-8 mb-6 w-full text-left text-lg font-bold">
+                    New Flow
+                </h1>
                 <form
                     onSubmit={handleSubmit(onSubmit)}
                     className="flex flex-col gap-4"

@@ -42,10 +42,13 @@ const RegisterPage = () => {
     };
     return (
         <div className="flex h-screen w-full flex-col items-center justify-center gap-4">
-            <h1 className="text-4xl font-bold">Create an account</h1>
-            <p>
+            <p className="bg-gradient-to-r from-red-500 to-purple-500 bg-clip-text text-xl font-bold text-transparent">
+                GoFit
+            </p>
+            <h1 className="text-2xl font-bold">Create an account</h1>
+            <p className="text-gray-500">
                 Already have an account?{' '}
-                <Link to="/sign-in" className="hover:text-blue-600">
+                <Link to="/sign-in" className="text-black hover:text-blue-600">
                     Sign In
                 </Link>
             </p>
@@ -153,7 +156,7 @@ const RegisterPage = () => {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="flex w-full cursor-pointer justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-gray-800 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                            className="flex w-full cursor-pointer justify-center rounded-md bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-gradient-to-r hover:from-red-500 hover:to-purple-500 hover:transition hover:duration-500 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                         >
                             {isLoading ? 'Creating account...' : 'Sign up'}
                         </button>

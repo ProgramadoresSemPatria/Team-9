@@ -52,19 +52,22 @@ const HomePage = () => {
     return (
         <>
             <div className="flex w-full flex-col items-center">
-                <div className="flex items-center gap-2 p-8">
+                <div className="flex items-center justify-center gap-2 p-8 md:w-full md:max-w-6xl">
                     <input
                         type="text"
                         placeholder="Search for flows..."
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
-                        className="h-10 w-72 rounded-md bg-white py-3 pl-3"
+                        className="h-10 w-72 flex-grow rounded-md bg-white py-3 pl-3"
                     />
                     <button
                         onClick={handleSearchFlow}
-                        className="cursor-pointer rounded-md border-transparent bg-black px-3 py-3 shadow-sm transition-colors duration-200 hover:bg-gray-800 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none"
+                        className="flex cursor-pointer items-center justify-center gap-2 rounded-md border-transparent bg-black px-3 py-3 shadow-sm transition-colors duration-200 hover:bg-gray-800 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none md:py-2"
                     >
                         <img src={searchIcon} alt="search" />
+                        <span className="hidden text-white md:inline-block">
+                            Search
+                        </span>
                     </button>
                 </div>
                 <div className="mb-3 flex w-full gap-4 overflow-x-auto px-8">
@@ -74,11 +77,11 @@ const HomePage = () => {
                         ))}
                 </div>
                 <div className="h-64 w-full bg-[#808080]"></div>
-                <div className="flex h-64 w-full flex-col gap-2.5 p-8">
+                <div className="flex h-64 w-full max-w-7xl flex-col gap-2.5 p-8">
                     <span className="text-xl font-bold">Today</span>
                     <TrainingDayContainer trainingDay={trainingDay} />
                 </div>
-                <div className="flex w-full flex-col gap-2.5 p-8 pb-7">
+                <div className="flex w-full max-w-7xl flex-col gap-2.5 p-8 pb-7">
                     <span className="text-xl font-bold">Your flows</span>
                     <div className="flex w-full gap-4 overflow-x-auto">
                         {flowsList.length > 0 ? (
