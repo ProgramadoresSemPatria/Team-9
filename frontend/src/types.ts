@@ -40,9 +40,8 @@ export type CreateExercise = {
 };
 
 export type CreateTrainingDay = {
-    flowId: string;
     title: string;
-    dayOfWeek: string;
+    day: string;
     duration: number;
 };
 
