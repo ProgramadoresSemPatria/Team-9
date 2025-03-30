@@ -33,8 +33,8 @@ const AddNewFlow = () => {
     };
 
     return (
-        <section className="flex min-h-screen w-full flex-col items-center gap-5 px-8">
-            <div>
+        <section className="mx-auto flex min-h-screen w-full max-w-xl min-w-80 flex-col items-center gap-5 px-8">
+            <div className="w-full">
                 <h1 className="mt-8 mb-6 w-full text-left text-lg font-bold">
                     New Flow
                 </h1>
@@ -93,7 +93,7 @@ const AddNewFlow = () => {
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="mt-2 cursor-pointer rounded-md bg-black px-4 py-2 font-medium text-white"
+                        className="mt-2 cursor-pointer rounded-md bg-black px-4 py-2 font-medium text-white hover:bg-gradient-to-r hover:from-red-500 hover:to-purple-500 hover:transition hover:duration-500"
                     >
                         Create
                     </button>
