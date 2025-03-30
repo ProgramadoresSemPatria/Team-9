@@ -5,7 +5,7 @@ import TrainingDayContainer from '../components/TrainingDayContainer';
 import { Flow, TrainingDay } from '../types';
 import getFlowsByUser from '../services/flows/getAll';
 import Cookies from 'js-cookie';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 const trainingDay: TrainingDay = {
     title: 'Chest',
@@ -73,7 +73,9 @@ const HomePage = () => {
                 <div className="mb-3 flex w-full gap-4 overflow-x-auto px-8">
                     {flowsFinds &&
                         flowsFinds.map((flow) => (
-                            <FlowItem key={flow.id} flow={flow} />
+                            <Link key={flow.id} to={`/flow-details/${flow.id}`}>
+                                <FlowItem key={flow.id} flow={flow} />
+                            </Link>
                         ))}
                 </div>
                 <div className="h-64 w-full bg-[#808080]"></div>
@@ -86,7 +88,9 @@ const HomePage = () => {
                     <div className="flex w-full gap-4 overflow-x-auto">
                         {flowsList.length > 0 ? (
                             flowsList.map((flow) => (
-                                <FlowItem key={flow.id} flow={flow} />
+                                <Link key={flow.id} to={`/flow-details/${flow.id}`}>
+                                    <FlowItem key={flow.id} flow={flow} />
+                                </Link>
                             ))
                         ) : (
                             <button
