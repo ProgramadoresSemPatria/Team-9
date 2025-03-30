@@ -56,3 +56,28 @@ func GetExercise(c *gin.Context) {
 	c.JSON(http.StatusOK, exercise)
 }
 
+func GetExercisesByWorkoutDay(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+	userID := c.MustGet("userID").(string)
+
+	workoutDayID := c.Param("id")
+	if workoutDayID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Workout day ID is required"})
+		return
+	}
+
+	var workoutDay models.WorkoutDay
+	if err := db.Where("id = ? AND user_id = ?", workoutDayID, userID).First(&workoutDay).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Workout day not found"})
+		return
+	}
+
+	var exercises []models.Exercise
+	if err := db.Where("workout_day_id = ?", workoutDayID).Find(&exercises).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch exercises"})
+		return
+	}
+
+	c.JSON(http.StatusOK, exercises)
+}
+
