@@ -11,7 +11,7 @@ import (
 
 func OpenConnection() (*gorm.DB, error) {
 	connectionInfo := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable TimeZone=%s",
+		"host=%s port=%s user=%s password=%s dbname=%s sslmode=require TimeZone=%s",
 		os.Getenv("DB_HOST"),
 		os.Getenv("DB_PORT"),
 		os.Getenv("DB_USER"),
