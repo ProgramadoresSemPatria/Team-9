@@ -38,11 +38,19 @@ func main() {
 	corsOrigin := os.Getenv("CORS")
 
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:  []string{corsOrigin},
-		AllowMethods:  []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:  []string{"Origin", "Content-Type", "Accept"},
-		ExposeHeaders: []string{"Content-Length"},
-		MaxAge:        12 * time.Hour,
+		AllowOrigins: []string{corsOrigin},
+		AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"},
+		AllowHeaders: []string{
+			"Origin",
+			"Content-Type",
+			"Accept",
+			"Authorization",
+			"X-Requested-With",
+			"Access-Control-Allow-Headers",
+		},
+		ExposeHeaders:    []string{"Content-Length", "Authorization"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
 	}))
 
 	r.Use(func(c *gin.Context) {
