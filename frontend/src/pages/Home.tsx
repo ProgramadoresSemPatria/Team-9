@@ -5,6 +5,7 @@ import TrainingDayContainer from '../components/TrainingDayContainer';
 import { Flow, TrainingDay } from '../types';
 import getFlowsByUser from '../services/flows/getAll';
 import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router';
 
 const trainingDay: TrainingDay = {
     title: 'Chest',
@@ -17,6 +18,8 @@ const HomePage = () => {
     const [inputValue, setInputValue] = useState('');
     const [flowsList, setFlowsList] = useState<Flow[]>([]);
     const [flowsFinds, setFlowsFinds] = useState<Flow[]>();
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const getFlows = async () => {
@@ -83,7 +86,12 @@ const HomePage = () => {
                                 <FlowItem key={flow.id} flow={flow} />
                             ))
                         ) : (
-                            <span>Add a flow</span>
+                            <button
+                                className="cursor-pointer rounded-md border-transparent bg-black px-3 py-3 text-white shadow-sm transition-colors duration-200 hover:bg-gray-800 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none"
+                                onClick={() => navigate('/add-new-flow')}
+                            >
+                                Add a flow
+                            </button>
                         )}
                     </div>
                 </div>
