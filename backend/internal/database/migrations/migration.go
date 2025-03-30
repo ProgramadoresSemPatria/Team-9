@@ -13,4 +13,5 @@ func createTables(db *gorm.DB) {
 	db.AutoMigrate(&models.User{})
 	db.AutoMigrate((&models.Flow{}))
 	db.AutoMigrate((&models.WorkoutDay{}))
+	db.AutoMigrate((&models.Exercise{}))
 }
