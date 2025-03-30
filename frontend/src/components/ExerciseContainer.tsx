@@ -11,7 +11,7 @@ const ExerciseContainer = ({ exercise, onDeleteClick }: ExerciseContainerProps) 
         <div key={exercise.id} className="flex w-full items-center justify-between">
             <div className="flex w-2/3 flex-col gap-2 rounded-md border p-2">
                 <span>
-                    {exercise.title} • {exercise.muscle}
+                    {exercise.title} • {exercise.muscle_group}
                 </span>
                 Reps: {exercise.repetitions} • Sets: {exercise.sets}
             </div>
