@@ -30,10 +30,11 @@ const SignInPage = () => {
             if (response?.status !== 200) {
                 throw new Error('Error to log in');
             }
-            console.log(response.data);
+
             const token = response.data.token;
 
             Cookies.set('auth_token', token, { expires: 7 });
+
             navigate('/');
         } catch (error) {
             console.error(error);
