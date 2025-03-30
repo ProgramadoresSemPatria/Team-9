@@ -20,7 +20,7 @@ const WorkoutInfo = () => {
     };
 
     return (
-        <div className="flex min-h-screen flex-col gap-5 p-8">
+        <div className="mx-auto flex min-h-screen max-w-4xl flex-col gap-5 p-8">
             <div className="flex flex-col gap-1.5">
                 <h2 className="text-lg font-bold">{workout.name}</h2>
                 <div className="flex gap-3">

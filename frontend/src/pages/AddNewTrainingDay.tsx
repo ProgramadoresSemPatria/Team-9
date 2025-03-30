@@ -18,8 +18,8 @@ const AddNewTrainingDayPage = () => {
     };
 
     return (
-        <div className="container flex w-full flex-col gap-2 px-7 py-5 md:items-center">
-            <h1 className="text-2xl font-bold">New Training day</h1>
+        <div className="container mx-auto flex w-full flex-col gap-2 px-7 py-5 md:items-center">
+            <h1 className="text-left text-2xl font-bold">New Training day</h1>
             <CreateNewTrainingDayForm
                 exercises={exercises}
                 setOpenAddExerciseDialog={() => setAddExerciseDialogIsOpen(true)}
