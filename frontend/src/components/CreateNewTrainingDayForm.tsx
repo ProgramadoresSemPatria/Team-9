@@ -53,11 +53,10 @@ const CreateNewTrainingDayForm = ({
                     </p>
                 )}
             </div>
-            <div className="flex w-full items-start justify-between px-3 md:justify-between md:px-0">
-                <div className="flex flex-col">
-                    <label htmlFor="day" className="">
-                        Day
-                    </label>
+            <div className="flex w-full items-start justify-between px-3 md:px-0">
+                <div className="flex w-full flex-col space-y-2">
+                    {' '}
+                    <label htmlFor="day">Day</label>
                     <select
                         id="day"
                         className={`mt-1 h-10 w-36 rounded-md border bg-white px-3 py-2 placeholder-gray-400 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none ${
@@ -82,10 +81,10 @@ const CreateNewTrainingDayForm = ({
                         </p>
                     )}
                 </div>
-                <div className="flex flex-col">
-                    <label htmlFor="duration" className="">
-                        Duration (minutes)
-                    </label>
+
+                <div className="flex w-full flex-col space-y-2">
+                    {' '}
+                    <label htmlFor="duration">Duration (minutes)</label>
                     <input
                         id="sets"
                         type="text"
@@ -102,18 +101,19 @@ const CreateNewTrainingDayForm = ({
                     )}
                 </div>
             </div>
+
             <div className="flex w-full flex-col items-center gap-3">
                 <button
-                    className="cursor-pointer rounded-md border border-transparent bg-black px-4 py-2 text-xl text-white shadow-sm transition-colors duration-200 hover:bg-gray-800 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:w-48"
+                    className="w-full cursor-pointer rounded-md bg-black px-3 py-2 text-xl text-white shadow-sm transition-colors duration-200 hover:bg-gradient-to-r hover:from-red-500 hover:to-purple-500 hover:transition hover:duration-500 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                     onClick={() => setOpenAddExerciseDialog()}
                 >
                     Add exercise
                 </button>
                 <button
                     type="submit"
-                    className="flex h-10 w-full cursor-pointer items-center justify-center rounded-md bg-black text-white md:w-64"
+                    className="flex h-10 w-full cursor-pointer items-center justify-center rounded-md bg-black px-3 py-2 text-lg text-white transition-transform hover:bg-gradient-to-r hover:from-red-500 hover:to-purple-500 hover:transition hover:duration-500"
                 >
-                    <span className="text-xl">Save</span>
+                    Save
                 </button>
             </div>
         </form>
