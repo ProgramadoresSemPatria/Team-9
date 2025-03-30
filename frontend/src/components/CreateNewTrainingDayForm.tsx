@@ -38,8 +38,6 @@ const CreateNewTrainingDayForm = ({
     const onSubmit: SubmitHandler<CreateNewTrainingDayFormType> = async (
         createNewTrainingDayParams
     ) => {
-        console.log(createNewTrainingDayParams);
-        console.log(exercises);
         setIsLoading(true);
         try {
             const token = Cookies.get('auth_token');
@@ -47,7 +45,8 @@ const CreateNewTrainingDayForm = ({
             if (!token) throw new Error('JWT token invalid');
 
             const response = await createTrainingDay(
-                { ...createNewTrainingDayParams, flowId: id },
+                createNewTrainingDayParams,
+                id,
                 token
             );
 
@@ -95,9 +94,9 @@ const CreateNewTrainingDayForm = ({
                     <select
                         id="day"
                         className={`mt-1 h-10 w-36 rounded-md border bg-white px-3 py-2 placeholder-gray-400 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none ${
-                            errors.dayOfWeek ? 'border-red-500' : 'border-gray-300'
+                            errors.day ? 'border-red-500' : 'border-gray-300'
                         }`}
-                        {...register('dayOfWeek')}
+                        {...register('day')}
                     >
                         <option value="" disabled>
                             Select a day
@@ -110,9 +109,9 @@ const CreateNewTrainingDayForm = ({
                         <option value="Saturday">Saturday</option>
                         <option value="Sunday">Sunday</option>
                     </select>
-                    {errors.dayOfWeek && (
+                    {errors.day && (
                         <p className="mt-1 text-sm text-red-600">
-                            {errors.dayOfWeek.message}
+                            {errors.day.message}
                         </p>
                     )}
                 </div>
@@ -127,7 +126,7 @@ const CreateNewTrainingDayForm = ({
                         className={`mt-1 h-10 w-36 rounded-md border bg-white px-3 py-2 placeholder-gray-400 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none ${
                             errors.duration ? 'border-red-500' : 'border-gray-300'
                         }`}
-                        {...register('duration', { valueAsNumber: true })}
+                        {...register('duration')}
                     />
                     {errors.duration && (
                         <p className="mt-1 text-sm text-red-600">
