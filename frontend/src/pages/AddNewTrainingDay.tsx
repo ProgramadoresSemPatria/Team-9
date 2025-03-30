@@ -14,7 +14,7 @@ const AddNewTrainingDayPage = () => {
     };
 
     const handleDeleteExercise = (id: string) => {
-        setExercises(exercises.filter((exercise) => exercise.id !== id));
+        setExercises((prev) => prev.filter((exercise) => exercise.id !== id));
     };
 
     return (
