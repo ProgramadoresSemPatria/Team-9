@@ -37,3 +37,22 @@ func CreateExercise(c *gin.Context) {
 	c.JSON(http.StatusCreated, exercise)
 }
 
+func GetExercise(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+	userID := c.MustGet("userID").(string)
+
+	exerciseID := c.Param("id")
+	if exerciseID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Exercise ID is required"})
+		return
+	}
+
+	var exercise models.Exercise
+	if err := db.Where("id = ? AND user_id = ?", exerciseID, userID).First(&exercise).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Exercise not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, exercise)
+}
+
