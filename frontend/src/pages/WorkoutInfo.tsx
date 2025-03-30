@@ -1,4 +1,4 @@
-import { CheckCircle, Fire, Timer } from 'phosphor-react';
+import { Fire, Timer } from 'phosphor-react';
 import ExerciseInfo from '../components/ExerciseInfo';
 import { useState } from 'react';
 
@@ -14,10 +14,6 @@ const WorkoutInfo = () => {
             { id: 3, name: 'Deadlift', sets: 3, reps: 10 },
         ],
     });
-
-    const handleFinishWorkout = () => {
-        setWorkout((prev) => ({ ...prev, isWorkoutFinished: true }));
-    };
 
     return (
         <div className="mx-auto flex min-h-screen max-w-4xl flex-col gap-5 p-8">
@@ -47,13 +43,6 @@ const WorkoutInfo = () => {
                     <ExerciseInfo key={exercise.name} exerciseInfo={exercise} />
                 ))}
             </div>
-            <button
-                className="flex w-full cursor-pointer items-center justify-center gap-1 rounded-md bg-black px-4 py-2 font-medium text-white"
-                onClick={handleFinishWorkout}
-            >
-                Mark as finished
-                <CheckCircle weight="fill" size={18} className="text-white" />
-            </button>
         </div>
     );
 };
