@@ -76,9 +76,9 @@ func main() {
 		// Flow-specific routes (operate on a single flow)
 		flowRoutes := authGroup.Group("/flows/:id") // :id = flow ID parameter
 		{
-			flowRoutes.GET("/", handlers.GetFlow)
-			flowRoutes.PUT("/", handlers.UpdateFlow)
-			flowRoutes.DELETE("/", handlers.DeleteFlow)
+			flowRoutes.GET("", handlers.GetFlow)
+			flowRoutes.PUT("", handlers.UpdateFlow)
+			flowRoutes.DELETE("", handlers.DeleteFlow)
 
 			// Workout day routes under a flow
 			flowRoutes.POST("/workout-days", handlers.CreateWorkoutDay)
@@ -88,9 +88,9 @@ func main() {
 		// Workout day-specific routes (operate on a single workout day)
 		workoutDayRoutes := authGroup.Group("/workout-days/:id") // :id = workout day ID
 		{
-			workoutDayRoutes.GET("/", handlers.GetWorkoutDay)
-			workoutDayRoutes.PUT("/", handlers.UpdateWorkoutDay)
-			workoutDayRoutes.DELETE("/", handlers.DeleteWorkoutDay)
+			workoutDayRoutes.GET("", handlers.GetWorkoutDay)
+			workoutDayRoutes.PUT("", handlers.UpdateWorkoutDay)
+			workoutDayRoutes.DELETE("", handlers.DeleteWorkoutDay)
 
 			// Exercise routes under a workout day
 			workoutDayRoutes.POST("/exercises", handlers.CreateExercise)
@@ -100,9 +100,9 @@ func main() {
 		// Exercise-specific routes (operate on a single exercise)
 		exerciseRoutes := authGroup.Group("/exercises/:id") // :id = exercise ID
 		{
-			exerciseRoutes.GET("/", handlers.GetExercise)
-			exerciseRoutes.PUT("/", handlers.UpdateExercise)
-			exerciseRoutes.DELETE("/", handlers.DeleteExercise)
+			exerciseRoutes.GET("", handlers.GetExercise)
+			exerciseRoutes.PUT("", handlers.UpdateExercise)
+			exerciseRoutes.DELETE("", handlers.DeleteExercise)
 		}
 	}
 
