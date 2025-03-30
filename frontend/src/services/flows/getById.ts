@@ -3,8 +3,10 @@ import { api } from '../../lib/axios';
 const getFlowById = async (flowId: string, token: string) => {
     try {
         const response = await api.get(`/flows/${flowId}`, {
+            withCredentials: true,
             headers: {
                 Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
             },
         });
 
