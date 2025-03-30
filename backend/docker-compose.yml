@@ -6,7 +6,7 @@ services:
     build:
       context: .
     volumes:
-      - .:/app
+      - .env:/app/.env
     environment:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
