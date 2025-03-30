@@ -2,13 +2,17 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { signInSchema } from '../schemas/signIn';
+import login from '../services/user/login';
+import Cookies from 'js-cookie';
 
 type SignInForm = z.infer<typeof signInSchema>;
 
 const SignInPage = () => {
     const [isLoading, setIsLoading] = useState(false);
+
+    const navigate = useNavigate();
 
     const {
         register,
@@ -21,7 +25,17 @@ const SignInPage = () => {
     const onSubmit: SubmitHandler<SignInForm> = async (signInParams) => {
         setIsLoading(true);
         try {
-            console.log(signInParams);
+            const response = await login(signInParams);
+
+            if (response?.status !== 200) {
+                throw new Error('Error to log in');
+            }
+
+            const token = response.data.token;
+
+            Cookies.set('auth_token', token, { expires: 7 });
+
+            navigate('/');
         } catch (error) {
             console.error(error);
         } finally {

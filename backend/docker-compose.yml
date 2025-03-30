@@ -15,7 +15,10 @@ services:
       DB_NAME: ${DB_NAME}
       POSTGRES_TIME_ZONE: ${POSTGRES_TIME_ZONE}
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    networks:
+      - elk-network
 
   pgadmin:
     image: dpage/pgadmin4
@@ -27,6 +30,9 @@ services:
       - "8080:80"
     depends_on:
       - postgres
+    networks:
+      - elk-network
+
 
   postgres:
     image: postgres:latest
@@ -37,6 +43,46 @@ services:
       - postgresDB:/var/lib/postgresql/data
     env_file:
       - .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${DB_USER} -d $${DB_NAME}"]
+      interval: 2s
+      timeout: 2s
+      retries: 15
+    networks:
+      - elk-network
+
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.5.1
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    networks:
+      - elk-network
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.5.1
+    container_name: logstash
+    volumes:
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+    environment:
+      - "LS_JAVA_OPTS=-Xmx256m -Xms256m"
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5044:5044"
+      - "5000:5000"
+      - "9600:9600"
+    networks:
+      - elk-network
+
 
 volumes:
   postgresDB:
+
+networks:
+  elk-network:
+    driver: bridge
