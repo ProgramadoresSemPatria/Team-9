@@ -23,7 +23,7 @@ const CreateExerciseForm = ({ setExercises }: CreateExerciseFormProps) => {
     const onSubmit: SubmitHandler<CreateExerciseForm> = async (
         createExerciseParams
     ) => {
-        setExercises(createExerciseParams);
+        setExercises({ ...createExerciseParams, id: crypto.randomUUID() });
         reset();
     };
 
@@ -57,13 +57,13 @@ const CreateExerciseForm = ({ setExercises }: CreateExerciseFormProps) => {
                     type="text"
                     placeholder="Ex: Chest"
                     className={`mt-1 block w-full rounded-md border bg-white px-3 py-2 placeholder-gray-400 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none ${
-                        errors.muscle ? 'border-red-500' : 'border-gray-300'
+                        errors.muscle_group ? 'border-red-500' : 'border-gray-300'
                     }`}
-                    {...register('muscle')}
+                    {...register('muscle_group')}
                 />
-                {errors.muscle && (
+                {errors.muscle_group && (
                     <p className="mt-1 text-sm text-red-600">
-                        {errors.muscle.message}
+                        {errors.muscle_group.message}
                     </p>
                 )}
             </div>
