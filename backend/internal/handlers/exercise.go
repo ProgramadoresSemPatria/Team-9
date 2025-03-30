@@ -81,3 +81,47 @@ func GetExercisesByWorkoutDay(c *gin.Context) {
 	c.JSON(http.StatusOK, exercises)
 }
 
+func UpdateExercise(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+	userID := c.MustGet("userID").(string)
+
+	exerciseID := c.Param("id")
+	if exerciseID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Exercise ID is required"})
+		return
+	}
+
+	var input models.ExerciseuUpdateInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var exercise models.Exercise
+	if err := db.Where("id = ? AND user_id = ?", exerciseID, userID).First(&exercise).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Exercise not found"})
+		return
+	}
+
+	if input.Title != "" {
+		exercise.Title = input.Title
+	}
+	if input.MuscleGroup != "" {
+		exercise.MuscleGroup = input.MuscleGroup
+	}
+	if input.Repetitions != 0 {
+		exercise.Repetitions = input.Repetitions
+	}
+	if input.Sets != 0 {
+		exercise.Sets = input.Sets
+	}
+
+	if err := db.Save(&exercise).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update exercise"})
+		return
+	}
+
+	c.JSON(http.StatusOK, exercise)
+}
+
+func DeleteExercise(c *gin.Context) {
