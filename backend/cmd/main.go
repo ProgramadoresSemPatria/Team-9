@@ -79,9 +79,22 @@ func main() {
 			flowRoutes.GET("/workout-days", handlers.GetWorkoutDaysByFlow)
 		}
 
-		authGroup.GET("/workout-days/:id", handlers.GetWorkoutDay)
-		authGroup.PUT("/workout-days/:id", handlers.UpdateWorkoutDay)
-		authGroup.DELETE("/workout-days/:id", handlers.DeleteWorkoutDay)
+		workoutDayRoutes := authGroup.Group("/workout-days/:id")
+		{
+			workoutDayRoutes.GET("/", handlers.GetWorkoutDay)
+			workoutDayRoutes.PUT("/", handlers.UpdateWorkoutDay)
+			workoutDayRoutes.DELETE("/", handlers.DeleteWorkoutDay)
+
+			workoutDayRoutes.POST("/exercises", handlers.CreateExercise)
+			workoutDayRoutes.GET("/exercises", handlers.GetExercisesByWorkoutDay)
+		}
+
+		exerciseRoutes := authGroup.Group("/exercises/:id")
+		{
+			exerciseRoutes.GET("/", handlers.GetExercise)
+			exerciseRoutes.PUT("/", handlers.UpdateExercise)
+			exerciseRoutes.DELETE("/", handlers.DeleteExercise)
+		}
 	}
 
 	http.ListenAndServe(fmt.Sprintf(":%s", config.GetServerPort()), r)
