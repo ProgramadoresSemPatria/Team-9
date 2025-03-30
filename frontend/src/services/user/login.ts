@@ -3,7 +3,7 @@ import { Login } from '../../types';
 
 const login = async (loginParams: Login) => {
     try {
-        const response = await api.post(`/register`, loginParams);
+        const response = await api.post(`/login`, loginParams);
 
         return response;
     } catch (error) {
