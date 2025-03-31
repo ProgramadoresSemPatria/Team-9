@@ -33,7 +33,7 @@ const SignInPage = () => {
 
             const token = response.data.token;
 
-            Cookies.set('auth_token', token, { expires: 7 });
+            Cookies.set('auth_token', token, { expires: 1 });
 
             navigate('/');
         } catch (error) {

@@ -7,12 +7,10 @@ const createTrainingDay = async (
     token: string
 ) => {
     try {
+        console.log(typeof createTrainingDayParams.duration);
         const response = await api.post(
             `/flows/${flowId}/workout-days`,
-            {
-                ...createTrainingDayParams,
-                duration: createTrainingDayParams.duration.toString(),
-            },
+            createTrainingDayParams,
             {
                 withCredentials: true,
                 headers: {

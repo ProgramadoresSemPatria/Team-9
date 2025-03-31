@@ -2,10 +2,10 @@ import { Barbell } from 'phosphor-react';
 
 interface ExerciseInfoProps {
     exerciseInfo: {
-        id: number;
-        name: string;
+        id: string;
+        title: string;
         sets: number;
-        reps: number;
+        repetitions: number;
     };
 }
 
@@ -17,9 +17,11 @@ const ExerciseInfo = ({ exerciseInfo }: ExerciseInfoProps) => {
                     <Barbell size={20} weight="fill" className="text-purple-500" />
                 </div>
                 <div>
-                    <h3 className="font-medium text-black">{exerciseInfo.name}</h3>
+                    <h3 className="font-medium text-black">{exerciseInfo.title}</h3>
                     <div className="flex gap-2">
-                        <p className="text-gray-500">Reps: {exerciseInfo.reps}</p>
+                        <p className="text-gray-500">
+                            Reps: {exerciseInfo.repetitions}
+                        </p>
                         <p className="text-gray-500">Sets: {exerciseInfo.sets}</p>
                     </div>
                 </div>

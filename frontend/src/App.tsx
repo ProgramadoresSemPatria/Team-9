@@ -19,7 +19,7 @@ function App() {
                         path="add-new-day/:id"
                         element={<AddNewTrainingDayPage />}
                     />
-                    <Route path="workout-info" element={<WorkoutInfo />} />
+                    <Route path="workout-info/:id" element={<WorkoutInfo />} />
                     <Route path="flow-details/:id" element={<FlowDetailsPage />} />
                 </Route>
                 <Route path="register" element={<RegisterPage />} />
