@@ -1,5 +1,5 @@
 export type Exercise = {
-    id?: string;
+    id: string;
     title: string;
     muscle_group: string;
     repetitions: number;
