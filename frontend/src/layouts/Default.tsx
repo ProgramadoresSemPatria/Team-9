@@ -17,7 +17,7 @@ const DefaultLayout = () => {
     return (
         <>
             <Header />
-            <div className="bg-[#F4F4F4]">
+            <div className="min-h-screen bg-[#F4F4F4]">
                 <Outlet />
             </div>
         </>
