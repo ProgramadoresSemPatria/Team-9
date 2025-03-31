@@ -6,6 +6,7 @@ import { Flow, TrainingDay } from '../types';
 import getFlowsByUser from '../services/flows/getAll';
 import Cookies from 'js-cookie';
 import { Link, useNavigate } from 'react-router';
+import MotivacionalQuotes from '../components/MotivacionalQuotes';
 
 const trainingDay: TrainingDay = {
     title: 'Chest',
@@ -78,7 +79,7 @@ const HomePage = () => {
                             </Link>
                         ))}
                 </div>
-                <div className="h-64 w-full bg-[#808080]"></div>
+                <MotivacionalQuotes />
                 <div className="flex h-64 w-full max-w-7xl flex-col gap-2.5 p-8">
                     <span className="text-xl font-bold">Today</span>
                     <TrainingDayContainer trainingDay={trainingDay} />
