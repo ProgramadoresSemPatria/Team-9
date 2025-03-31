@@ -111,6 +111,12 @@ const AddNewFlow = () => {
                     >
                         Create
                     </button>
+                    <button
+                    onClick={() => navigate('/')}
+                        className="mt-4 w-full rounded-md bg-gray-200 p-3 text-lg font-medium text-black transition-colors duration-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+                    >
+                        Back to Home
+                    </button>
                 </form>
             </div>
         </section>
