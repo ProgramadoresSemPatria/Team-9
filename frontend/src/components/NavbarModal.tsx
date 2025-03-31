@@ -34,9 +34,6 @@ const NavbarModal = ({
                 >
                     Add new flow
                 </Link>
-                <Link to="/register" className="text-gray-700 hover:text-blue-600">
-                    Create an account
-                </Link>
             </nav>
         </div>
     );
