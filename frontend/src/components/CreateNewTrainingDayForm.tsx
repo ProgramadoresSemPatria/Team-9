@@ -147,7 +147,7 @@ const CreateNewTrainingDayForm = ({
                         className={`mt-1 h-10 w-36 rounded-md border bg-white px-3 py-2 placeholder-gray-400 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none ${
                             errors.duration ? 'border-red-500' : 'border-gray-300'
                         }`}
-                        {...register('duration')}
+                        {...register('duration', { valueAsNumber: true })}
                     />
                     {errors.duration && (
                         <p className="mt-1 text-sm text-red-600">
