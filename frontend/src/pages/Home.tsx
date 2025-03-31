@@ -1,19 +1,11 @@
 import { useEffect, useState } from 'react';
 import searchIcon from '../assets/Search.svg';
 import FlowItem from '../components/FlowItem';
-import TrainingDayContainer from '../components/TrainingDayContainer';
-import { Flow, TrainingDay } from '../types';
+import { Flow } from '../types';
 import getFlowsByUser from '../services/flows/getAll';
 import Cookies from 'js-cookie';
 import { Link, useNavigate } from 'react-router';
 import MotivacionalQuotes from '../components/MotivacionalQuotes';
-
-const trainingDay: TrainingDay = {
-    title: 'Chest',
-    dayOfWeek: 'Monday',
-    exercises: 5, //Exercise[]
-    duration: 45,
-};
 
 const HomePage = () => {
     const [inputValue, setInputValue] = useState('');
@@ -80,12 +72,16 @@ const HomePage = () => {
                         ))}
                 </div>
                 <MotivacionalQuotes />
-                <div className="flex h-64 w-full max-w-7xl flex-col gap-2.5 p-8">
-                    <span className="text-xl font-bold">Today</span>
-                    <TrainingDayContainer trainingDay={trainingDay} />
-                </div>
                 <div className="flex w-full max-w-7xl flex-col gap-2.5 p-8 pb-7">
-                    <span className="text-xl font-bold">Your flows</span>
+                    <div className="flex items-center gap-3">
+                        <span className="text-xl font-bold">Your flows</span>
+                        <button
+                            className="flex cursor-pointer items-center justify-center gap-2 rounded-md border-transparent bg-black px-3 py-3 text-white shadow-sm transition-colors duration-200 hover:bg-gray-800 hover:bg-gradient-to-r hover:from-red-500 hover:to-purple-500 hover:transition hover:duration-500 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none md:py-2"
+                            onClick={() => navigate('/add-new-flow')}
+                        >
+                            Add a flow
+                        </button>
+                    </div>
                     <div className="flex w-full gap-4 overflow-x-auto">
                         {flowsList.length > 0 ? (
                             flowsList.map((flow) => (
@@ -94,12 +90,7 @@ const HomePage = () => {
                                 </Link>
                             ))
                         ) : (
-                            <button
-                                className="cursor-pointer rounded-md border-transparent bg-black px-3 py-3 text-white shadow-sm transition-colors duration-200 hover:bg-gray-800 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none"
-                                onClick={() => navigate('/add-new-flow')}
-                            >
-                                Add a flow
-                            </button>
+                            <span>No flows added</span>
                         )}
                     </div>
                 </div>
