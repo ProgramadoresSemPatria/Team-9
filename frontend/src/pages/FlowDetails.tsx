@@ -49,7 +49,7 @@ const FlowDetailsPage = () => {
     return (
         <div className="flex w-full flex-col items-center p-7">
             <div className="flex flex-col items-center gap-4">
-                <div className="mb-4 flex w-full flex-col gap-2">
+                <div className="mb-4 flex w-full flex-col gap-2 md:items-center">
                     <h1 className="text-2xl font-bold">{flow?.title}</h1>
                     <h3 className="text-xl text-gray-500">{flow?.level}</h3>
                 </div>

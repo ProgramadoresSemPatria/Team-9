@@ -59,8 +59,8 @@ const AddNewFlow = () => {
     };
 
     return (
-        <section className="flex min-h-screen w-full flex-col items-center gap-5 px-8">
-            <div>
+        <section className="mx-auto flex min-h-screen w-full max-w-xl min-w-80 flex-col items-center gap-5 px-8">
+            <div className="w-full">
                 <h1 className="mt-8 mb-6 w-full text-left text-lg font-bold">
                     New Flow
                 </h1>
@@ -114,26 +114,12 @@ const AddNewFlow = () => {
                             </p>
                         )}
                     </div>
-                    <div className="flex flex-col gap-1.5">
-                        <label htmlFor="cover" className="text-sm font-medium">
-                            Cover
-                        </label>
-                        <input
-                            type="file"
-                            id="cover"
-                            className={`mt-1 block rounded-md border bg-white px-3 py-2 placeholder-gray-400 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none ${
-                                errors.cover ? 'border-red-500' : 'border-gray-300'
-                            }`}
-                            {...register('cover')}
-                            onChange={handleFileChange}
-                        />
-                    </div>
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="mt-2 cursor-pointer rounded-md bg-black px-4 py-2 font-medium text-white"
+                        className="mt-2 cursor-pointer rounded-md bg-black px-4 py-2 font-medium text-white hover:bg-gradient-to-r hover:from-red-500 hover:to-purple-500 hover:transition hover:duration-500"
                     >
-                        Criar
+                        Create
                     </button>
                 </form>
             </div>
