@@ -11,7 +11,6 @@ type AddNewFlowForm = z.infer<typeof addNewFlowSchema>;
 
 const AddNewFlow = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const [cover, setCover] = useState<File>();
 
     const navigate = useNavigate();
 
@@ -28,7 +27,6 @@ const AddNewFlow = () => {
         try {
             const createFlowObject = {
                 ...createFlowParams,
-                cover: cover,
             };
 
             const token = Cookies.get('auth_token');
@@ -47,14 +45,6 @@ const AddNewFlow = () => {
             console.error(error);
         } finally {
             setIsLoading(false);
-        }
-    };
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const selectedFile = e.target.files;
-
-        if (selectedFile) {
-            setCover(selectedFile[0]);
         }
     };
 
