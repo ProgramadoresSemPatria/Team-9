@@ -98,7 +98,6 @@ const HomePage = () => {
 
 			<MotivacionalQuotes />
 
-
 			<div className="flex w-full max-w-7xl flex-col gap-3 px-8 pb-10">
 				<div className="flex items-center justify-between">
 					<span className="text-xl font-bold">Your flows</span>
@@ -110,7 +109,7 @@ const HomePage = () => {
 					</button>
 				</div>
 
-				<div className="flex gap-4 overflow-x-auto transition-opacity duration-500 ease-in">
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4 transition-opacity duration-500 ease-in">
 					{flowsList.length > 0 ? (
 						flowsList.map((flow) => (
 							<Link key={flow.id} to={`/flow-details/${flow.id}`}>
