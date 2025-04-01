@@ -2,7 +2,7 @@ import { api } from '../../lib/axios';
 
 const deleteFlow = async (flowId: string, token: string) => {
     try {
-        const response = await api.get(`/flows/${flowId}`, {
+        const response = await api.delete(`/flows/${flowId}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
