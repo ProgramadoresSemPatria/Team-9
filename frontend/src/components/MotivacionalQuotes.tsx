@@ -25,7 +25,9 @@ const MotivacionalQuotes = () => {
     return (
         <div className="flex h-64 w-full flex-col items-center justify-center bg-[#808080]">
             <div className="flex h-full w-1/2 items-center justify-center">
-                <p className="text-center text-3xl">{quote}</p>
+                <p className="text-center text-2xl font-bold text-black md:text-3xl">
+                    {quote}
+                </p>
             </div>
         </div>
     );
