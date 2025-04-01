@@ -6,6 +6,8 @@ import getTrainingDayByFlowId from '../services/trainingDay/getByFlowId';
 import Cookies from 'js-cookie';
 import { Flow, TrainingDay } from '../types';
 import getFlowById from '../services/flows/getById';
+import { Trash } from 'phosphor-react';
+import deleteFlow from '../services/flows/delete';
 
 const FlowDetailsPage = () => {
     const [flow, setFlow] = useState<Flow>();
@@ -15,10 +17,26 @@ const FlowDetailsPage = () => {
 
     if (!id) return;
 
+    const token = Cookies.get('auth_token');
+
+    if (!token) throw new Error('JWT token invalid');
+
     const navigate = useNavigate();
 
     const handleClick = () => {
         navigate(`/add-new-day/${id}`);
+    };
+
+    const handleDeleteFlow = async () => {
+        if (!flow?.id) return;
+
+        const response = await deleteFlow(flow.id, token);
+
+        if (response?.status !== 200) {
+            throw new Error('Error to delete flow');
+        }
+
+        navigate('/');
     };
 
     useEffect(() => {
@@ -80,8 +98,19 @@ const FlowDetailsPage = () => {
                     </span>
                 </button>
                 <button
+                    onClick={handleDeleteFlow}
+                    className="flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-md bg-red-700 p-3 text-xl text-black shadow-sm transition-colors duration-200 hover:bg-red-800 hover:transition hover:duration-500 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                    <div className="flex items-center justify-center rounded-md bg-black p-3">
+                        <Trash color="white" className="h-6 w-6" />
+                    </div>
+                    <span className="flex-grow text-lg font-medium text-white">
+                        Delete flow
+                    </span>
+                </button>
+                <button
                     onClick={() => navigate('/')}
-                    className="mt-4 w-full rounded-md bg-gray-200 p-3 text-lg font-medium text-black transition-colors duration-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+                    className="mt-4 w-full cursor-pointer rounded-md bg-gray-200 p-3 text-lg font-medium text-black transition-colors duration-200 hover:bg-gray-300 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none"
                 >
                     Back to Home
                 </button>

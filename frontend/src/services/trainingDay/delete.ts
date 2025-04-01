@@ -2,7 +2,7 @@ import { api } from '../../lib/axios';
 
 const deleteTrainingDay = async (trainingDayId: string, token: string) => {
     try {
-        const response = await api.get(`/workout-days/${trainingDayId}`, {
+        const response = await api.delete(`/workout-days/${trainingDayId}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

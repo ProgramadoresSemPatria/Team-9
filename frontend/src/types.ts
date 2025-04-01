@@ -15,7 +15,7 @@ export type TrainingDay = {
 };
 
 export type Flow = {
-    id?: string;
+    id: string;
     title: string;
     level: string;
 };

@@ -24,15 +24,12 @@ const RegisterPage = () => {
     const onSubmit: SubmitHandler<RegisterForm> = async (registerParams) => {
         setIsLoading(true);
         try {
-            console.log(registerParams);
-
             const response = await registerUser(registerParams);
 
             if (response?.status !== 201) {
                 throw new Error('Error to register');
             }
 
-            console.log(response.data);
             navigate('/sign-in');
         } catch (error) {
             console.error(error);

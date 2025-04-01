@@ -1,8 +1,8 @@
 import { api } from '../../lib/axios';
 
-const deleteFlow = async (flowId: string, token: string) => {
+const deleteExercise = async (exerciseId: string, token: string) => {
     try {
-        const response = await api.delete(`/flows/${flowId}`, {
+        const response = await api.delete(`/exercises/${exerciseId}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -14,4 +14,4 @@ const deleteFlow = async (flowId: string, token: string) => {
     }
 };
 
-export default deleteFlow;
+export default deleteExercise;
