@@ -110,7 +110,7 @@ const HomePage = () => {
                     </button>
                 </div>
 
-                <div className="flex gap-4 overflow-x-auto transition-opacity duration-500 ease-in">
+                <div className="grid grid-cols-1 gap-6 p-4 transition-opacity duration-500 ease-in sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                     {flowsList.length > 0 ? (
                         flowsList.map((flow) => (
                             <Link key={flow.id} to={`/flow-details/${flow.id}`}>
