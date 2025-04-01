@@ -109,7 +109,7 @@ const CreateExerciseForm = ({ setExercises }: CreateExerciseFormProps) => {
             </div>
             <button
                 type="submit"
-                className="flex h-10 w-full cursor-pointer items-center justify-center rounded-md bg-black text-white"
+                className="cursor-pointer rounded-md bg-black px-4 py-2 font-medium text-white hover:bg-gradient-to-r hover:from-red-500 hover:to-purple-500 hover:transition hover:duration-500"
             >
                 <span className="text-xl">Add</span>
             </button>
